@@ -15,7 +15,11 @@ exports.show = function(req, res) {
     id:    id,
     name:  'Game ' + id
   };
-  res.render('games/show', {game: game});
+  res.render('games/show', {
+    stylesheets: ['compiled/board'],
+    scripts: ['board'],
+    game: game
+  });
 }
 
 exports.create = function(req, res) {
