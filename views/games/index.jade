@@ -1,0 +1,6 @@
+h1 Games
+div
+  ul
+    each game in games
+      li
+        a(href='/games/' + game.id)= game.name
