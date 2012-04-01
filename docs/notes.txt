@@ -1,0 +1,91 @@
+server side
+
+	stack
+		node.js
+			express
+			socket.io
+			maybe jade
+		mongo
+
+		
+
+client side
+
+	user picks up piece
+		valid moves are displayed (or maybe on hover, whatever)
+
+	user drops piece on invalid position
+		dont send anything to server
+
+	user drops piece on valid position
+		send current state string and the new move
+			so request looks like:
+			{
+				state: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+				move: {
+					from: '',
+					to:   '',
+				}
+			}
+			it could be stored, of course, for coming back to a game and seeing all moves later or whatever, but its not required
+
+		validate server-side to prevent any cheating
+
+		respond with new valid states and enabled rules
+			how does this look?
+			sending back the raw state string makes things ugly client side, doesnt it?
+			so send back valid piece moves AND ASSOCIATED RULE CHANGES in a more verbose way
+			{
+				//While the full state does not seem necessary, it is necessary to support both game resumption and rules that may create pieces
+				state: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+
+				last_move: {
+					from: '',
+					to:   ''
+				},
+
+				//Maybe include valid moves for both players, so waiting player can hover and see affects of rule changes easily
+				valid_moves: {
+					'key is from-coord to make piece lookups easy': {
+						'key is to-coord': {
+
+							//Include full new state to support rules that create pieces
+							state: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
+
+							rules {
+								enabled: [{
+									id: '',
+									name: ''
+								}, ...],
+								disabled: [{
+									id: '',
+									name: ''
+								}, ...]
+							}
+						}
+					}, ...
+				}
+
+				//Maybe include rules for all positions of all pieces from current state, so users can plan ahead
+				//But unless rules are limited to 'this piece type is here' and not the global board state, would actually need a full rule set client-side, hmm
+			}
+
+		send same response to other player
+			websockets?
+
+wishlist
+	very cool
+		user defined rule sets
+		ai - find an open source and modify to take advantage of changing rules
+		api so others can write ais
+			pubsub to recieve move data, or they can connect and get latest state
+		ai vs ai games
+
+	features
+		game resumption
+		game lobby
+		view other peoples games in progress
+		game history (including all moves)
+		chatting in game
+		accounts
+		game invites, ranking stuff
