@@ -11,6 +11,9 @@ html
   body
     != body
 
+    script(type='text/javascript', src='/javascripts/jquery-1.7.2.min.js');
+    script(type='text/javascript', src='/javascripts/underscore-min.js');
+
     - if(typeof scripts !== 'undefined')
         each script in scripts
           script(type='text/javascript', src='/javascripts/' + script + '.js')
