@@ -3,4 +3,14 @@ html
   head
     title Metachess
     link(rel='stylesheet', href='/stylesheets/style.css')
-  body!= body
+
+    - if(typeof stylesheets !== 'undefined')
+      each stylesheet in stylesheets
+        link(rel='stylesheet', href='/stylesheets/' + stylesheet + '.css')
+
+  body
+    != body
+
+    - if(typeof scripts !== 'undefined')
+        each script in scripts
+          script(type='text/javascript', src='/javascripts/' + script + '.js')
