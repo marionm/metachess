@@ -1,3 +1,3 @@
 ## Metachess
 
-Experimental node.js implementation of metachess, ala GEB.
+Experimental node.js implementation of metachess, inspired by GEB.
