@@ -1,3 +1,7 @@
-h2= game.name
+h2= game.id
 div
+  div(id='initialState', class='noshow')
+    span(id='state')= game.state
+    span(id='turn')=  game.turn
+
   !=partial('games/_board')

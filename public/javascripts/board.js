@@ -15,11 +15,12 @@ var pieceMapping = {
   'c': { name: 'White King' }
 }
 
-var getState = function() {
-  //TODO: Make ajax call
+var getInitialState = function() {
+  //TODO: This sort of sucks
+  var state = $('#initialState');
   return {
-    state: '2345643211111111000000000000000000000000000000007777777789abca98',
-    turn: 'white'
+    state: $('#state', state).text();
+    turn:  $('#turn',  state).text();
   }
 }
 
@@ -32,6 +33,6 @@ var renderState = function(state) {
 }
 
 $(document).ready(function() {
-  var state = getState();
+  var state = getInitialState();
   renderState(state);
 });

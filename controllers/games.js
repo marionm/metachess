@@ -1,20 +1,7 @@
-exports.index = function(req, res) {
-  var games = [{
-    id: 1,
-    name: 'Game 1'
-  },{
-    id: 2,
-    name: 'Game 2'
-  }];
-  res.render('./games/index', {games: games});
-}
+var Game = require('../models/game');
 
-exports.show = function(req, res) {
-  var id = req.params.id;
-  var game = {
-    id:    id,
-    name:  'Game ' + id
-  };
+var show = function(req, res, game) {
+  console.log(game);
   res.render('games/show', {
     stylesheets: ['compiled/board'],
     scripts: ['board'],
@@ -22,7 +9,20 @@ exports.show = function(req, res) {
   });
 }
 
+exports.index = function(req, res) {
+  Game.find({}, function(err, games) {
+    res.render('./games/index', {games: games});
+  });
+}
+
+exports.show = function(req, res) {
+  var game = Game.findById(req.params.id);
+  show(req, res, game);
+}
+
 exports.create = function(req, res) {
-  var id = req.params.id;
-  res.send('the new ' + id + ' game!');
+  var game = new Game();
+  game.save(function() {
+    show(req, res, game);
+  });
 }

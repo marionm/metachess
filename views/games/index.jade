@@ -1,6 +1,9 @@
 h1 Games
 div
+  form(method='post', action='/games')
+    input(type='submit', value='Create new')
+div
   ul
     each game in games
       li
-        a(href='/games/' + game.id)= game.name
+        a(href='/games/' + game.id)= game.id
