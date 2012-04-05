@@ -1,3 +1,5 @@
+var mongoose = require('mongoose');
+
 module.exports = function(app, express) {
   app.configure(function(){
     app.set('views', __dirname + '/../views');
@@ -10,9 +12,11 @@ module.exports = function(app, express) {
 
   app.configure('development', function(){
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+    mongoose.connect('localhost', 'metachessDev');
   });
 
   app.configure('production', function(){
     app.use(express.errorHandler());
+    mongoose.connect('localhost', 'metachessProd');
   });
 }
