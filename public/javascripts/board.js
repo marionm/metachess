@@ -15,6 +15,15 @@ var pieceMapping = {
   'c': { name: 'White King' }
 }
 
+var prepareBoard = function() {
+  $('.board .cell').droppable({
+    hoverClass: 'piece-hover',
+    drop: function(event, ui) {
+      $(this).append($(ui.draggable));
+    }
+  });
+};
+
 var getInitialState = function() {
   //TODO: This sort of sucks
   var state = $('#currentState');
@@ -24,15 +33,40 @@ var getInitialState = function() {
   }
 }
 
+//TODO: Get backbone or something for client side modeling
+//TODO: Get mustache or EJS for client side templating (and try to use the same server-side)
 var renderState = function(state) {
   var stateString = state.state;
-  //TODO: Get backbone or something for client side modeling
   $.each(stateString, function(i, c) {
-    $('#cell' + i).text(pieceMapping[c].name);
+    var cell = $('#cell' + i);
+    cell.children().remove();
+
+    if(c != 0) {
+      cell.html('<div class="piece">' + pieceMapping[c].name + '</div>');
+    }
   });
+
+  $('.board .piece').draggable({
+    stack:       '.board',
+    containment: '.board',
+    helper:      'clone',
+    start: function() {
+      $(this).parent().addClass('original');
+    },
+    stop: function() {
+      $('.board .cell').removeClass('original');
+      submitTurn(this);
+    }
+  });
+}
+
+var submitTurn = function(piece) {
+  piece = $(piece);
+  //TODO: Do this
 }
 
 $(document).ready(function() {
   var state = getInitialState();
+  prepareBoard();
   renderState(state);
 });
