@@ -17,10 +17,10 @@ var pieceMapping = {
 
 var getInitialState = function() {
   //TODO: This sort of sucks
-  var state = $('#initialState');
+  var state = $('#currentState');
   return {
-    state: $('#state', state).text();
-    turn:  $('#turn',  state).text();
+    state: $('#state', state).text(),
+    turn:  $('#turn',  state).text()
   }
 }
 
