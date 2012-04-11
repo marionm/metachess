@@ -1,7 +1,7 @@
 h2= game.id
 div
   div(id='currentState', class='noshow')
-    span(id='state')= game.state
-    span(id='turn')=  game.turn
+    span(id='state')= currentState.state
+    span(id='turn')=  currentState.turn
 
   !=partial('games/_board')

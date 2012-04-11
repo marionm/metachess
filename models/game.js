@@ -1,8 +1,20 @@
 var mongoose = require('mongoose');
+var GameState = require('./gameState');
 
-var Game = mongoose.model('Game', new mongoose.Schema({
-  state: { type: String, default: '2345643211111111000000000000000000000000000000007777777789abca98' },
-  turn:  { type: Number, default: 0 }
-}));
+var schema = new mongoose.Schema({
+  states: [GameState.schema]
+});
 
-module.exports = Game;
+schema.pre('save', function(next) {
+  if(this.states.length == 0) {
+    this.states.push(new GameState.model());
+  }
+  next();
+});
+
+var Game = mongoose.model('Game', schema);
+
+module.exports = {
+  model:  Game,
+  schema: schema
+}
