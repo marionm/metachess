@@ -1,20 +1,26 @@
+var _ = require('underscore');
 var mongoose = require('mongoose');
+
 var GameState = require('./gameState');
 
-var schema = new mongoose.Schema({
+var Schema = new mongoose.Schema({
   states: [GameState.schema]
 });
 
-schema.pre('save', function(next) {
+Schema.methods.currentState = function() {
+  return _.last(this.states);
+};
+
+Schema.pre('save', function(next) {
   if(this.states.length == 0) {
     this.states.push(new GameState.model());
   }
   next();
 });
 
-var Game = mongoose.model('Game', schema);
+var Game = mongoose.model('Game', Schema);
 
 module.exports = {
   model:  Game,
-  schema: schema
+  schema: Schema
 }

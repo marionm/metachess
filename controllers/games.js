@@ -1,13 +1,11 @@
-var _ = require('underscore');
 var Game = require('../models/game').model;
 var GameState = require('../models/gameState').model;
 
 var show = function(req, res, game) {
   res.render('games/show', {
-    stylesheets:  ['compiled/board'],
-    scripts:      ['board'],
-    game:         game,
-    currentState: _.last(game.states)
+    stylesheets: ['compiled/board'],
+    scripts:     ['board'],
+    game:        game
   });
 }
 

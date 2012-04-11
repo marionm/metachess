@@ -1,17 +1,26 @@
 var c = '../controllers/';
+var a = c + 'api/';
 
-var index = require(c + 'index.js');
-var games = require(c + 'games.js');
-var turns = require(c + 'turns.js');
+var views = {
+  index: require(c + 'index'),
+  games: require(c + 'games'),
+  turns: require(c + 'turns')
+}
+
+var api = {
+  games: require(a + 'games')
+}
 
 module.exports = function(app) {
-  app.all('/', index.index);
+  app.all('/', views.index.index);
 
-  app.get( '/games',     games.index);
-  app.get( '/games/:id', games.show);
-  app.post('/games',     games.create);
+  app.get( '/games',     views.games.index);
+  app.get( '/games/:id', views.games.show);
+  app.post('/games',     views.games.create);
 
-  app.get( '/games/:gameId/turns',     turns.index);
-  app.get( '/games/:gameId/turns/:id', turns.show);
-  app.post('/games/:gameId/turns/:id', turns.create);
+  app.get( '/games/:gameId/turns',     views.turns.index);
+  app.get( '/games/:gameId/turns/:id', views.turns.show);
+  app.post('/games/:gameId/turns/:id', views.turns.create);
+
+  app.get( '/api/games/:gameId/currentState', api.games.currentState);
 }
