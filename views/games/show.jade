@@ -1,7 +1,8 @@
 h2= game.id
-div
-  div(id='currentState', class='noshow')
-    span(id='state')= game.currentState().state
-    span(id='turn')=  game.currentState().turn
 
-  !=partial('games/_board')
+!=partial('games/_board')
+
+script
+  window.game = new Game({
+    id: '#{game.id}'
+  });

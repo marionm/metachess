@@ -9,13 +9,17 @@ html
       each stylesheet in stylesheets
         link(rel='stylesheet', href='/stylesheets/' + stylesheet + '.css')
 
-  body
-    != body
-
     script(type='text/javascript', src='/javascripts/jquery-1.7.2.min.js');
     script(type='text/javascript', src='/javascripts/jquery-ui-1.8.18.custom.min.js');
     script(type='text/javascript', src='/javascripts/underscore-min.js');
     script(type='text/javascript', src='/javascripts/backbone-min.js');
+
+    script(type='text/javascript', src='/javascripts/models/game.js');
+    script(type='text/javascript', src='/javascripts/models/gameState.js');
+    script(type='text/javascript', src='/javascripts/models/piece.js');
+
+  body
+    != body
 
     - if(typeof scripts !== 'undefined')
         each script in scripts

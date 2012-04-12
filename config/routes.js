@@ -22,5 +22,5 @@ module.exports = function(app) {
   app.get( '/games/:gameId/turns/:id', views.turns.show);
   app.post('/games/:gameId/turns/:id', views.turns.create);
 
-  app.get( '/api/games/:gameId/currentState', api.games.currentState);
+  app.get( '/api/games/:gameId', api.games.show);
 }

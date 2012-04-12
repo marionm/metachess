@@ -4,7 +4,7 @@ var GameState = require('../models/gameState').model;
 var show = function(req, res, game) {
   res.render('games/show', {
     stylesheets: ['compiled/board'],
-    scripts:     ['board'],
+    scripts:     ['game'],
     game:        game
   });
 }
