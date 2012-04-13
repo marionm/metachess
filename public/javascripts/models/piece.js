@@ -1,10 +1,6 @@
 var Piece = Backbone.Model.extend({
   name: function() {
     return this.get('color') + ' ' + this.get('type');
-  },
-
-  moveTo: function(index) {
-    $('#cell' + index).append($('#piece' + this.cid));
   }
 },{
   fromState: function(state, index) {

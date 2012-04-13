@@ -1,3 +1,4 @@
+//TODO: Cells should be models, too? This is getting messy
 var prepareBoard = function() {
   $('.board .cell').droppable({
     hoverClass: 'piece-hover',
@@ -11,8 +12,18 @@ var prepareBoard = function() {
       var piece = window.game.currentState().getPiece(pieceId);
 
       var cell = $(this).data('index');
-      piece.moveTo(cell);
+
+      var move = new Move({
+        gameId: window.game.id,
+        from:   piece.get('cell'),
+        to:     cell
+      });
+
+      move.save(function() {
+        $('#cell' + index).append($('#piece' + this.cid));
+      });
     }
+
   });
 };
 
