@@ -2,15 +2,19 @@ var prepareBoard = function() {
   $('.board .cell').droppable({
     hoverClass: 'piece-hover',
     drop: function(event, ui) {
-      $(this).append($(ui.draggable));
+      //If invalid,
+      // ui.draggable.draggable('option', 'revert', true);
+
+      $('.board .cell').removeClass('original');
+
+      var pieceId = ui.draggable.data('piece-id');
+      var piece = window.game.currentState().getPiece(pieceId);
+
+      var cell = $(this).data('index');
+      piece.moveTo(cell);
     }
   });
 };
-
-var submitTurn = function(piece) {
-  piece = $(piece);
-  //TODO: Do this
-}
 
 $(document).ready(function() {
   window.game.fetch({
