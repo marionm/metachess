@@ -35,13 +35,20 @@ exports.move = function(req, res) {
       p2 +
       stateString.substr(i2 + 1, 64 - i2);
 
-    game.states.push(new GameState({
+    var newState = new GameState({
       state: newStateString,
       turn:  currentState.turn + 1
-    }));
+    });
+    game.states.push(newState);
 
     game.save(function(err, game) {
-      res.send(game);
+      res.send({
+        gameState: newState,
+        move: {
+          from: body.from,
+          to:   body.to
+        }
+      });
     });
   });
 }

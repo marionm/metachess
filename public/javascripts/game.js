@@ -11,17 +11,9 @@ var prepareBoard = function() {
       var pieceId = ui.draggable.data('piece-id');
       var piece = window.game.currentState().getPiece(pieceId);
 
-      var cell = $(this).data('index');
+      var toPosition = $(this).data('index');
 
-      var move = new Move({
-        gameId: window.game.id,
-        from:   piece.get('cell'),
-        to:     cell
-      });
-
-      move.save(function() {
-        $('#cell' + index).append($('#piece' + this.cid));
-      });
+      window.game.move(piece, toPosition);
     }
 
   });
