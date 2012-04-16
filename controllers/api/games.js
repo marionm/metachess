@@ -44,6 +44,7 @@ exports.move = function(req, res) {
     game.save(function(err, game) {
       res.send({
         gameState: newState,
+        validMoves: newState.validMoves(),
         move: {
           from: body.from,
           to:   body.to
