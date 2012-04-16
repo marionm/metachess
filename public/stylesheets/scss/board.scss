@@ -23,7 +23,7 @@ table.board {
       background-color: lightGrey;
     }
 
-    &.valid {
+    &.valid-drag, &.valid-mouseover {
       background-color: darkGrey;
     };
   }

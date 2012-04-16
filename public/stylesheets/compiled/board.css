@@ -11,7 +11,7 @@ table.board {
       background-color: darkgoldenrod; }
     table.board .cell.piece-hover {
       background-color: lightGrey; }
-    table.board .cell.valid {
+    table.board .cell.valid-drag, table.board .cell.valid-mouseover {
       background-color: darkGrey; }
   table.board .piece {
     height: 50px;

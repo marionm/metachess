@@ -12,6 +12,16 @@ var Piece = Backbone.Model.extend({
     return '<div id="piece' + this.cid + '" class="piece" data-piece-id="' + this.cid + '">' + this.name() + '</div>';
   },
 
+  setValidCellClass: function(currentCell, cssClass) {
+    var validMoveMap = window.game.currentState().get('validMoves');
+    if(validMoveMap) {
+      var validMoves = validMoveMap[currentCell.data('index')] || [];
+      _.each(validMoves, function(position) {
+        $('#cell' + position).addClass(cssClass);
+      });
+    }
+  },
+
   render: function() {
     var cell = this.getCell();
     cell.children().remove();
@@ -23,20 +33,29 @@ var Piece = Backbone.Model.extend({
       cell.append(this.toHtml());
     }
 
-    $(cell.children()[0]).draggable({
+    var pieceDom = $(cell.children()[0]);
+    var piece = this;
+
+    pieceDom.mouseover(function() {
+      piece.setValidCellClass(cell, 'valid-mouseover');
+    });
+
+    pieceDom.mouseout(function() {
+      $('.cell').removeClass('valid-mouseover');
+    });
+
+    pieceDom.draggable({
       stack:       '.board',
       containment: '.board',
       helper:      'clone',
       start: function() {
+        pieceDom.hide();
         cell.addClass('original');
-
-        var validMoveMap = window.game.currentState().get('validMoves');
-        if(validMoveMap) {
-          var validMoves = validMoveMap[cell.data('index')] || [];
-          _.each(validMoves, function(position) {
-            $('#cell' + position).addClass('valid');
-          });
-        }
+        piece.setValidCellClass(cell, 'valid-drag');
+      },
+      stop: function() {
+        pieceDom.show();
+        $('.cell').removeClass('valid-drag');
       }
     });
   },
