@@ -17,6 +17,6 @@ module.exports = function(app, express) {
 
   app.configure('production', function(){
     app.use(express.errorHandler());
-    mongoose.connect('localhost', 'metachessProd');
+    mongoose.connect('mongodb://temp:password@staff.mongohq.com:10018/app4036118');
   });
 }
