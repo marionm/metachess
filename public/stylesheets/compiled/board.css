@@ -11,6 +11,8 @@ table.board {
       background-color: darkgoldenrod; }
     table.board .cell.piece-hover {
       background-color: lightGrey; }
+    table.board .cell.valid {
+      background-color: darkGrey; }
   table.board .piece {
     height: 50px;
     width: 50px;

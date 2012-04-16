@@ -22,6 +22,10 @@ table.board {
     &.piece-hover {
       background-color: lightGrey;
     }
+
+    &.valid {
+      background-color: darkGrey;
+    };
   }
 
   .piece {

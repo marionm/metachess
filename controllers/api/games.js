@@ -1,9 +1,13 @@
+var _ = require('underscore');
 var Game = require('../../models/game').model;
 var GameState = require('../../models/gameState').model;
 
 exports.show = function(req, res) {
   Game.findById(req.params.gameId, function(err, game) {
-    res.send(game);
+    var json = game.toJSON();
+    var currentState = _.last(json.states);
+    currentState.validMoves = game.currentState().validMoves();
+    res.send(json);
   });
 };
 
@@ -42,9 +46,10 @@ exports.move = function(req, res) {
     game.states.push(newState);
 
     game.save(function(err, game) {
+      var stateJson = newState.toJSON();
+      stateJson.validMoves = newState.validMoves();
       res.send({
-        gameState: newState,
-        validMoves: newState.validMoves(),
+        gameState: stateJson,
         move: {
           from: body.from,
           to:   body.to
