@@ -42,6 +42,8 @@ Position.prototype.right = function(color, count) {
   return new Position(this.row, this.col + count);
 };
 
+//FIXME: These should be static and just take a piece, instead of taking a color and being called on a position
+//       Or I guess an instance method on Piece
 Position.prototype.forwardLeft = function(color, fbCount, lrCount) {
   return this.forward(color, fbCount).left(lrCount);
 };

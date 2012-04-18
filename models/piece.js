@@ -34,9 +34,12 @@ Piece.fromState = function(state, index) {
 };
 
 Piece.pieceAt = function(state, position) {
+  //FIXME: Check that position is on board before using index
+  //       So actually, make index a method that returns -1 if not on board
   return Piece.fromState(state, position.index);
 };
 
+//FIXME: Move onto GameState
 Piece.prototype.enemyAt = function(state, position) {
   var piece = Piece.pieceAt(state, position);
   return piece && this.enemy(piece);
@@ -143,6 +146,7 @@ Piece.prototype.validKingMoves = function(state, rules) {
   return this.validDirectionalMoves(state, rules, directions, false);
 };
 
+//FIXME: Doesn't belong here, and the signature is screwy
 Piece.prototype.validDirectionalMoves = function(state, rules, directions, continuous) {
   continuous = !!continuous;
 
