@@ -1,6 +1,10 @@
 var _ = require('underscore');
-var Game = require('../../models/game').model;
+
+var Game      = require('../../models/game').model;
 var GameState = require('../../models/gameState').model;
+
+var Position = require('../../models/position')
+var RuleSets = require('../../models/ruleSets');
 
 exports.show = function(req, res) {
   Game.findById(req.params.gameId, function(err, game) {
@@ -13,48 +17,38 @@ exports.show = function(req, res) {
 
 exports.move = function(req, res) {
   Game.findById(req.params.gameId, function(err, game) {
-    var body = req.body;
+    var state = game.currentState();
 
-    var currentState = game.currentState();
-    var stateString = currentState.state;
+    var from = new Position(req.body.from);
+    var to   = new Position(req.body.to);
 
-    //TODO: Move this stuff somewhere sensible
-    var i1, i2, p1, p2;
-    if(body.from < body.to) {
-      i1 = body.from;
-      i2 = body.to;
-      p1 = '0';
-      p2 = stateString[body.from];
-    } else {
-      i1 = body.to;
-      i2 = body.from;
-      p1 = stateString[body.from];
-      p2 = '0';
+    var ruleSet = RuleSets.standard();
+    var newState = ruleSet.apply(state, from, to);
+
+    if(!newState) {
+      //TODO: Real errors, please
+      res.send('nope');
+      return;
     }
 
-    var newStateString =
-      stateString.substr(0, i1) +
-      p1 +
-      stateString.substr(i1 + 1, i2 - i1 - 1) +
-      p2 +
-      stateString.substr(i2 + 1, 64 - i2);
+    //TODO: Push this into the model
+    var newStateJson = newState.toJSON();
+    stateJson.validMoves = newState.validMoves();
 
-    var newState = new GameState({
-      state: newStateString,
-      turn:  currentState.turn + 1
-    });
+    var response = {
+      gameState: stateJson,
+      move: {
+        from: from.index,
+        to:   to.index
+      }
+    };
+
     game.states.push(newState);
-
     game.save(function(err, game) {
-      var stateJson = newState.toJSON();
-      stateJson.validMoves = newState.validMoves();
-      res.send({
-        gameState: stateJson,
-        move: {
-          from: body.from,
-          to:   body.to
-        }
-      });
+      //TODO: Handle errors
+      res.send(response);
     });
+
   });
+
 }

@@ -1,3 +1,5 @@
+var GameState = require('./gameState').model
+
 var Rule = function(id, pieceType, targeter, matcher, postApply) {
   this.id = id;
   this.pieceType = pieceType;
@@ -7,12 +9,12 @@ var Rule = function(id, pieceType, targeter, matcher, postApply) {
 
   //function(state, piece, to)
   this.match = matcher || function(state, piece, to) {
+    if(piece.type != pieceType) return false;
+
     var targets = this.target(state, piece);
-    var match = false;
-    _.each(targets, function(target) {
-      if(target.index == to.index) match = true;
+    return _.any(targets, function(target) {
+      return target.index == to.index;
     });
-    return match;
   };
 
   //function(state, newStateString, piece, to)
@@ -50,7 +52,47 @@ Rule.prototype.apply = function(state, piece, to) {
     newState = this.postApply(state, newStateString, piece, to);
   }
 
-  return newState;
+  return new GameState({
+    state: newState,
+    turn:  state.turn + 1
+  });
+};
+
+Rule.validDirectionalMoves = function(state, piece, directions, continuous) {
+  continuous = !!continuous;
+
+  var moves = [];
+  var from = piece.position;
+
+  _.each(directions, function(direction) {
+    var positions;
+    if(continuous) {
+      positions = from.continuous(piece, direction);
+    } else {
+      positions = [from[direction](piece)];
+    }
+
+    var done = false;
+    _.each(positions, function(position) {
+      if(done) return;
+
+      if(!position.onBoard()) {
+        done = true;
+        return;
+      };
+
+      var piece = state.pieceAt(position);
+      if(!piece || that.enemy(piece)) {
+        moves.push(position.index);
+      }
+
+      if(piece) {
+        done = true;
+      }
+    });
+  });
+
+  return moves;
 };
 
 module.exports = Rule;
