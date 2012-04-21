@@ -8,9 +8,13 @@ var RuleSets = require('../../models/ruleSets');
 
 exports.show = function(req, res) {
   Game.findById(req.params.gameId, function(err, game) {
+    var ruleSet = RuleSets.standard;
+    var validMoves = game.currentState().validMoves(ruleSet);
+
     var json = game.toJSON();
     var currentState = _.last(json.states);
-    currentState.validMoves = game.currentState().validMoves();
+    currentState.validMoves = validMoves;
+
     res.send(json);
   });
 };
@@ -22,7 +26,7 @@ exports.move = function(req, res) {
     var from = new Position(req.body.from);
     var to   = new Position(req.body.to);
 
-    var ruleSet = RuleSets.standard();
+    var ruleSet = RuleSets.standard;
     var newState = ruleSet.apply(state, from, to);
 
     if(!newState) {
@@ -33,10 +37,10 @@ exports.move = function(req, res) {
 
     //TODO: Push this into the model
     var newStateJson = newState.toJSON();
-    stateJson.validMoves = newState.validMoves();
+    newStateJson.validMoves = newState.validMoves(ruleSet);
 
     var response = {
-      gameState: stateJson,
+      gameState: newStateJson,
       move: {
         from: from.index,
         to:   to.index

@@ -1,29 +1,26 @@
+var _ = require('underscore');
+
 var GameState = require('./gameState').model
 
 var Rule = function(id, pieceType, targeter, matcher, postApply) {
   this.id = id;
   this.pieceType = pieceType;
 
-  //function(state, piece)
-  this.targeter = targeter;
+  //function(state, piece) -> [positions]
+  this.targets = targeter;
 
-  //function(state, piece, to)
-  this.match = matcher || function(state, piece, to) {
+  //function(state, piece, to) -> boolean
+  this.matches = matcher || function(state, piece, to) {
     if(piece.type != pieceType) return false;
 
-    var targets = this.target(state, piece);
+    var targets = this.targets(state, piece);
     return _.any(targets, function(target) {
       return target.index == to.index;
     });
   };
 
-  //function(state, newStateString, piece, to)
+  //function(state, newStateString, piece, to) -> newStateString
   this.postApply = postApply;
-};
-
-Rule.prototype.target = function(state, piece) {
-  var targetPos = targeter(state, piece);
-  return targetPos && targetPos.onBaord() ? targetPos.index : null;
 };
 
 Rule.prototype.apply = function(state, piece, to) {
@@ -81,9 +78,9 @@ Rule.validDirectionalMoves = function(state, piece, directions, continuous) {
         return;
       };
 
-      var piece = state.pieceAt(position);
-      if(!piece || that.enemy(piece)) {
-        moves.push(position.index);
+      var otherPiece = state.pieceAt(position);
+      if(!otherPiece || piece.enemy(otherPiece)) {
+        moves.push(position);
       }
 
       if(piece) {

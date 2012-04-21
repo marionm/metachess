@@ -33,4 +33,12 @@ Piece.fromState = function(state, index) {
   return new Piece(type, color, index);
 };
 
+Piece.prototype.enemy = function(piece) {
+  return piece && piece.color != this.color;
+}
+
+Piece.prototype.friend = function(piece) {
+  return piece && piece.color == this.color;
+}
+
 module.exports = Piece;

@@ -50,12 +50,12 @@ Position.prototype.forwardLeft = function(piece, fCount, lCount) {
   return this.forward(piece, fCount).left(piece, lCount);
 };
 
-Position.prototype.forwardRight = function(color, fCount, rCount) {
+Position.prototype.forwardRight = function(piece, fCount, rCount) {
   return this.forward(piece, fCount).right(piece, rCount);
 };
 
 Position.prototype.backwardLeft = function(piece, bCount, lCount) {
-  return this.backward(piece, bCount).left(lCount);
+  return this.backward(piece, bCount).left(piece, lCount);
 };
 
 Position.prototype.backwardRight = function(piece, bCount, rCount) {
