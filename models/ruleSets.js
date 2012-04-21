@@ -67,8 +67,9 @@ standard.push(new Rule(standard.length, 'pawn', {
   targeter: function(state, piece) {
     var startingRow = piece.color == 'white' ? 7 : 2;
     if(piece.position.row == startingRow) {
-      var pos = piece.position.forward(piece, 2);
-      return state.pieceAt(pos) ? [] : [pos];
+      var forward1 = piece.position.forward(piece);
+      var forward2 = piece.position.forward(piece, 2);
+      return state.pieceAt(forward1) || state.pieceAt(forward2) ? [] : [forward2];
     } else {
       return [];
     }
