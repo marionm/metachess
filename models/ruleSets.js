@@ -20,11 +20,14 @@ RuleSet.prototype.apply = function(state, from, to) {
   var piece = state.pieceAt(from);
 
   var matchingRules = _.filter(this.rules, function(rule) {
+    //TODO: Need prior move, for en passant
+    //      This means it needs to be either:
+    //        a) infered from previous state (potentially complex if non-standard rules are enabled), or
+    //        b) provided by the client (and therefore verified)
     return rule.matches(state, piece, to);
   });
 
-  //TODO: Is this really an error case?
-  if(matchingRules.length != 1) {
+  if(matchingRules.length < 1) {
     return false;
   }
 
@@ -58,7 +61,6 @@ standard.push(new Rule(standard.length, 'pawn', function(state, piece) {
   return moves;
 }));
 
-//TODO: Needs custom matcher and post applicator for en passant
 standard.push(new Rule(standard.length, 'pawn', function(state, piece) {
   var startingRow = piece.color == 'white' ? 7 : 2;
   if(piece.position.row == startingRow) {
@@ -69,7 +71,11 @@ standard.push(new Rule(standard.length, 'pawn', function(state, piece) {
   }
 }));
 
-//TODO: Need pawn rule for queening
+//TODO: Needs custom matcher and applicator for en passant
+//      Since it is only valid on the first turn it is available, need knowledge of the turn that created this state
+
+//TODO: Need pawn rules for promotion
+//      How to let the user choose the desired piece? Need something client side - for now, default to queen
 
 standard.push(new Rule(standard.length, 'rook', function(state, piece) {
   var directions = ['forward', 'backward', 'left', 'right'];
@@ -117,7 +123,13 @@ standard.push(new Rule(standard.length, 'king', function(state, piece) {
 }));
 
 //TODO: Need castling rule
+//      Since this requires that the king has not yet moved, need to check state history
+//      This requires that these methods have access to:
+//        a) The game object, or
+//        b) Just all previous states (without the game object)
+//      Choice a sounds more flexible and cleaner
 
+//TODO: Need general rule that checks for check states to force player to block, and prevents putting self in check state
 
 
 module.exports = {
