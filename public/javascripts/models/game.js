@@ -22,18 +22,35 @@ var Game = Backbone.Model.extend({
   move: function(piece, to) {
     var move = new Move({
       gameId: this.id,
+      piece:  piece,
       from:   piece.get('position'),
       to:     to
     });
 
     var game = this;
-    move.save({}, {
-      success: function(move, res) {
-        var state = new GameState(res.gameState);
-        game.get('states').push(state);
-        state.render();
-      }
-    });
+    var success = function(move, res) {
+      var state = new GameState(res.gameState);
+      game.get('states').push(state);
+      state.render();
+    };
+
+    if(move.promotion()) {
+      showDialog('#promotionDialog', 'Promote pawn to...', {
+        'Cancel': function() {
+          $(this).dialog('close');
+        },
+        'Ok': function() {
+          $(this).dialog('close');
+
+          var type = $('input:checked', this).val();
+          move.set('promoteTo', type);
+
+          move.save({}, { success: success });
+        }
+      });
+    } else {
+      move.save({}, { success: success });
+    }
   }
 
 });

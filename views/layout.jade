@@ -5,6 +5,8 @@ html
     link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel='stylesheet', href='/stylesheets/jquery-ui-1.8.18.custom.css')
 
+    link(rel='stylesheet', href='/stylesheets/compiled/main.css')
+
     - if(typeof stylesheets !== 'undefined')
       each stylesheet in stylesheets
         link(rel='stylesheet', href='/stylesheets/' + stylesheet + '.css')
@@ -13,6 +15,8 @@ html
     script(type='text/javascript', src='/javascripts/jquery-ui-1.8.18.custom.min.js');
     script(type='text/javascript', src='/javascripts/underscore-min.js');
     script(type='text/javascript', src='/javascripts/backbone-min.js');
+
+    script(type='text/javascript', src='/javascripts/dialog.js');
 
     script(type='text/javascript', src='/javascripts/models/game.js');
     script(type='text/javascript', src='/javascripts/models/gameState.js');
