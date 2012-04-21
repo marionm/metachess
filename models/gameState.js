@@ -62,30 +62,26 @@ Schema.methods.friendAt = function(piece, position) {
 };
 
 Schema.methods.movePiece = function(piece, to) {
-  var state = this.state;
+  this.setPieceAt(null, piece.position);
+  this.setPieceAt(piece, to);
 
-  var index1, index2, code1, code2;
+  return this;
+};
 
-  if(piece.position.index < to.index) {
-    index1 = piece.position.index;
-    index2 = to.index;
-    code1 = '0';
-    code2 = piece.code;
-  } else {
-    index1 = to.index;
-    index2 = piece.position.index;
-    code1 = piece.code;
-    code2 = '0';
-  }
+Schema.methods.setPieceAt = function(piece, position) {
+  var index = position.index;
 
-  var newState = state.substr(0, index1) +
-    code1 + state.substr(index1 + 1, index2 - index1 - 1) +
-    code2 + state.substr(index2 + 1, 64 - index2);
+  var code = piece ? piece.code : 0;
+  //TODO: Need to push this type of thing into Piece
+  code = code.toString(16);
 
-  return new GameState({
-    state: newState,
-    turn:  this.turn + 1
-  });
+
+  this.state =
+    this.state.substr(0, index) +
+    code +
+    this.state.substr(index + 1, 64 - index);
+
+  return this;
 };
 
 var GameState = mongoose.model('GameState', Schema);
