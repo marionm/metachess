@@ -4,34 +4,54 @@ var Position = require('./position');
 var Piece = function(code, type, color, indexOrRow, col) {
   this.code = code;
   this.type = type;
-  this.color = color
+  this.color = color;
   this.position = new Position(indexOrRow, col);
+};
+
+Piece.create = function(type, color) {
+  var code = Piece.codeFromTypeAndColor(type, color)
+  return new Piece(code, type, color);
+};
+
+Piece.typeFromCode = function(code) {
+  if(code > 6) {
+    code -= 6;
+  }
+
+  switch(code) {
+    case 1:  return 'pawn';
+    case 2:  return 'rook';
+    case 3:  return 'knight';
+    case 4:  return 'bishop';
+    case 5:  return 'queen';
+    case 6:  return 'king';
+    default: return null;
+  }
+};
+
+Piece.colorFromCode = function(code) {
+  return code <= 6 ? 'white' : 'black';
+};
+
+Piece.codeFromTypeAndColor = function(type, color) {
+  var code = color == 'white' ? 0 : 6;
+  switch(type) {
+    case 'pawn'  : return code + 1;
+    case 'rook'  : return code + 2;
+    case 'knight': return code + 3;
+    case 'bishop': return code + 4;
+    case 'queen' : return code + 5;
+    case 'king'  : return code + 6;
+    default      : return null;
+  };
 };
 
 Piece.fromState = function(state, index) {
   var code = parseInt(state.state[index], 16);
   if(code == 0) return null;
 
-  var color;
-  var typeCode;
-  if(code <= 6) {
-    color = 'white';
-    typeCode = code;
-  } else {
-    color = 'black';
-    typeCode = code - 6;
-  }
-
-  var type;
-  switch(typeCode) {
-    case 1: type = 'pawn';   break;
-    case 2: type = 'rook';   break;
-    case 3: type = 'knight'; break;
-    case 4: type = 'bishop'; break;
-    case 5: type = 'queen';  break;
-    case 6: type = 'king';   break;
-    default: return null;
-  }
+  var type = Piece.typeFromCode(code);
+  var color = Piece.colorFromCode(code);
 
   return new Piece(code, type, color, index);
 };
