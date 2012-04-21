@@ -2,15 +2,17 @@ var _ = require('underscore');
 
 var GameState = require('./gameState').model
 
-var Rule = function(id, pieceType, targeter, matcher, applicators) {
+var Rule = function(id, pieceType, functions) {
   this.id = id;
   this.pieceType = pieceType;
 
+  functions = functions || {};
+
   //function(state, piece) -> [positions]
-  this.targets = targeter;
+  this.targets = functions.targeter;
 
   //function(state, piece, to) -> boolean
-  this.matches = matcher || function(state, piece, to) {
+  this.matches = functions.matcher || function(state, piece, to) {
     if(piece.type != pieceType) return false;
 
     var targets = this.targets(state, piece);
@@ -20,7 +22,8 @@ var Rule = function(id, pieceType, targeter, matcher, applicators) {
   };
 
   //Array of function(state, piece, to) -> state
-  applicators = _.compact(_.flatten([applicators]));
+  var applicators = [functions.applicators || functions.applicator];
+  applicators = _.compact(_.flatten(applicators));
   if(applicators.length == 0) {
     applicators.push(function(state, piece, to) {
       return state.movePiece(piece, to);

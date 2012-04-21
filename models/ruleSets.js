@@ -40,34 +40,38 @@ RuleSet.prototype.apply = function(state, from, to) {
 
 var standard = [];
 
-standard.push(new Rule(standard.length, 'pawn', function(state, piece) {
-  var moves = [];
+standard.push(new Rule(standard.length, 'pawn', {
+  targeter: function(state, piece) {
+    var moves = [];
 
-  var forward1 = piece.position.forward(piece);
-  if(forward1.onBoard() && !state.pieceAt(forward1)) {
-    moves.push(forward1);
-  };
+    var forward1 = piece.position.forward(piece);
+    if(forward1.onBoard() && !state.pieceAt(forward1)) {
+      moves.push(forward1);
+    };
 
-  var attack1 = piece.position.forwardLeft(piece);
-  if(attack1.onBoard() && state.enemyAt(piece, attack1)) {
-    moves.push(attack1);
-  };
+    var attack1 = piece.position.forwardLeft(piece);
+    if(attack1.onBoard() && state.enemyAt(piece, attack1)) {
+      moves.push(attack1);
+    };
 
-  var attack2 = piece.position.forwardRight(piece);
-  if(attack2.onBoard() && state.enemyAt(piece, attack2)) {
-    moves.push(attack2);
-  };
+    var attack2 = piece.position.forwardRight(piece);
+    if(attack2.onBoard() && state.enemyAt(piece, attack2)) {
+      moves.push(attack2);
+    };
 
-  return moves;
+    return moves;
+  }
 }));
 
-standard.push(new Rule(standard.length, 'pawn', function(state, piece) {
-  var startingRow = piece.color == 'white' ? 7 : 2;
-  if(piece.position.row == startingRow) {
-    var pos = piece.position.forward(piece, 2);
-    return state.pieceAt(pos) ? [] : [pos];
-  } else {
-    return [];
+standard.push(new Rule(standard.length, 'pawn', {
+  targeter: function(state, piece) {
+    var startingRow = piece.color == 'white' ? 7 : 2;
+    if(piece.position.row == startingRow) {
+      var pos = piece.position.forward(piece, 2);
+      return state.pieceAt(pos) ? [] : [pos];
+    } else {
+      return [];
+    }
   }
 }));
 
@@ -77,49 +81,59 @@ standard.push(new Rule(standard.length, 'pawn', function(state, piece) {
 //TODO: Need pawn rules for promotion
 //      How to let the user choose the desired piece? Need something client side - for now, default to queen
 
-standard.push(new Rule(standard.length, 'rook', function(state, piece) {
-  var directions = ['forward', 'backward', 'left', 'right'];
-  return Rule.validDirectionalMoves(state, piece, directions, true);
+standard.push(new Rule(standard.length, 'rook', {
+  targeter: function(state, piece) {
+    var directions = ['forward', 'backward', 'left', 'right'];
+    return Rule.validDirectionalMoves(state, piece, directions, true);
+  }
 }));
 
-standard.push(new Rule(standard.length, 'knight', function(state, piece) {
-  var moves = [];
+standard.push(new Rule(standard.length, 'knight', {
+  targeter: function(state, piece) {
+    var moves = [];
 
-  var pos = piece.position;
-  var positions = [
-    pos.forwardLeft(  piece, 1, 2),
-    pos.forwardLeft(  piece, 2, 1),
-    pos.forwardRight( piece, 1, 2),
-    pos.forwardRight( piece, 2, 1),
-    pos.backwardLeft( piece, 1, 2),
-    pos.backwardLeft( piece, 2, 1),
-    pos.backwardRight(piece, 1, 2),
-    pos.backwardRight(piece, 2, 1)
-  ];
+    var pos = piece.position;
+    var positions = [
+      pos.forwardLeft(  piece, 1, 2),
+      pos.forwardLeft(  piece, 2, 1),
+      pos.forwardRight( piece, 1, 2),
+      pos.forwardRight( piece, 2, 1),
+      pos.backwardLeft( piece, 1, 2),
+      pos.backwardLeft( piece, 2, 1),
+      pos.backwardRight(piece, 1, 2),
+      pos.backwardRight(piece, 2, 1)
+    ];
 
-  _.each(positions, function(position) {
-    var otherPiece = state.pieceAt(position);
-    if(position.onBoard() && (!otherPiece || piece.enemy(otherPiece))) {
-      moves.push(position);
-    }
-  });
+    _.each(positions, function(position) {
+      var otherPiece = state.pieceAt(position);
+      if(position.onBoard() && (!otherPiece || piece.enemy(otherPiece))) {
+        moves.push(position);
+      }
+    });
 
-  return moves;
+    return moves;
+  }
 }));
 
-standard.push(new Rule(standard.length, 'bishop', function(state, piece) {
-  var directions = ['forwardLeft', 'forwardRight', 'backwardLeft', 'backwardRight'];
-  return Rule.validDirectionalMoves(state, piece, directions, true);
+standard.push(new Rule(standard.length, 'bishop', {
+  targeter: function(state, piece) {
+    var directions = ['forwardLeft', 'forwardRight', 'backwardLeft', 'backwardRight'];
+    return Rule.validDirectionalMoves(state, piece, directions, true);
+  }
 }));
 
-standard.push(new Rule(standard.length, 'queen', function(state, piece) {
-  var directions = ['forward', 'backward', 'left', 'right', 'forwardLeft', 'forwardRight', 'backwardLeft', 'backwardRight'];
-  return Rule.validDirectionalMoves(state, piece, directions, true);
+standard.push(new Rule(standard.length, 'queen', {
+  targeter: function(state, piece) {
+    var directions = ['forward', 'backward', 'left', 'right', 'forwardLeft', 'forwardRight', 'backwardLeft', 'backwardRight'];
+    return Rule.validDirectionalMoves(state, piece, directions, true);
+  }
 }));
 
-standard.push(new Rule(standard.length, 'king', function(state, piece) {
-  var directions = ['forward', 'backward', 'left', 'right', 'forwardLeft', 'forwardRight', 'backwardLeft', 'backwardRight'];
-  return Rule.validDirectionalMoves(state, piece, directions, false);
+standard.push(new Rule(standard.length, 'king', {
+  targeter: function(state, piece) {
+    var directions = ['forward', 'backward', 'left', 'right', 'forwardLeft', 'forwardRight', 'backwardLeft', 'backwardRight'];
+    return Rule.validDirectionalMoves(state, piece, directions, false);
+  }
 }));
 
 //TODO: Need castling rule
