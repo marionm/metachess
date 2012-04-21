@@ -52,7 +52,7 @@ standard.push(new Rule(standard.length, 'pawn', function(state, piece) {
 
   var attack2 = piece.position.forwardRight(piece);
   if(attack2.onBoard() && state.enemyAt(piece, attack2)) {
-    moves.push(attack);
+    moves.push(attack2);
   };
 
   return moves;

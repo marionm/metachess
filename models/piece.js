@@ -1,7 +1,8 @@
 var _ = require('underscore');
 var Position = require('./position');
 
-var Piece = function(type, color, indexOrRow, col) {
+var Piece = function(code, type, color, indexOrRow, col) {
+  this.code = code;
   this.type = type;
   this.color = color
   this.position = new Position(indexOrRow, col);
@@ -12,15 +13,17 @@ Piece.fromState = function(state, index) {
   if(code == 0) return null;
 
   var color;
+  var typeCode;
   if(code <= 6) {
     color = 'white';
+    typeCode = code;
   } else {
     color = 'black';
-    code -= 6;
+    typeCode = code - 6;
   }
 
   var type;
-  switch(code) {
+  switch(typeCode) {
     case 1: type = 'pawn';   break;
     case 2: type = 'rook';   break;
     case 3: type = 'knight'; break;
@@ -30,7 +33,7 @@ Piece.fromState = function(state, index) {
     default: return null;
   }
 
-  return new Piece(type, color, index);
+  return new Piece(code, type, color, index);
 };
 
 Piece.prototype.enemy = function(piece) {
