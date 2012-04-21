@@ -12,23 +12,7 @@ var Game = Backbone.Model.extend({
     });
     this.set('states', states);
 
-    var stateString = lastState.get('state');
-
-    var pieces = {};
-
-    for(var i = 0; i < stateString.length; i++) {
-      var piece = Piece.fromState(stateString, i);
-      if(piece) {
-        pieces[piece.cid] = piece;
-      }
-    }
-
-    this.set('pieces', pieces);
-    lastState.set('pieces', pieces);
-  },
-
-  getPiece: function(id) {
-    return this.get('pieces')[id];
+    lastState.render();
   },
 
   currentState: function() {
@@ -43,22 +27,13 @@ var Game = Backbone.Model.extend({
     });
 
     var game = this;
-    move.save({},{
+    move.save({}, {
       success: function(move, res) {
-        var gameState = new GameState(res.gameState);
-        gameState.set('pieces', game.get('pieces'));
-        game.get('states').push(gameState);
-        game.renderMove(new Move(res.move));
+        var state = new GameState(res.gameState);
+        game.get('states').push(state);
+        state.render();
       }
     });
-  },
-
-  renderMove: function(move) {
-    var cell = $('#cell' + move.get('from'));
-    var pieceId = $(cell.children()[0]).data('piece-id');
-    var piece = this.getPiece(pieceId);
-
-    piece.animateMove(move);
   }
 
 });
