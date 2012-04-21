@@ -1,6 +1,7 @@
 var _ = require('underscore');
 
-var Rule = require('./rule');
+var Rule  = require('./rule');
+var Piece = require('./piece');
 
 //TODO: Convert to Mongoose model maybe
 var RuleSet = function(rules) {
@@ -60,7 +61,19 @@ standard.push(new Rule(standard.length, 'pawn', {
     };
 
     return moves;
-  }
+  },
+  applicators: [
+    Rule.defaultApplicator,
+    function(state, piece, to) {
+      var lastRow = piece.color == 'white' ? 1 : 8;
+      if(to.row == lastRow) {
+        //TODO: The promotion piece needs to be selectable by the user
+        var type = 'queen';
+        state.setPieceAt(Piece.create(type, piece.color), to);
+      }
+      return state;
+    }
+  ]
 }));
 
 standard.push(new Rule(standard.length, 'pawn', {
