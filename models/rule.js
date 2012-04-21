@@ -71,7 +71,7 @@ Rule.validDirectionalMoves = function(state, piece, directions, continuous) {
         moves.push(position);
       }
 
-      if(piece) {
+      if(otherPiece) {
         done = true;
       }
     });
