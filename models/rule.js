@@ -2,7 +2,7 @@ var _ = require('underscore');
 
 var GameState = require('./gameState').model
 
-var defaultApplicator = function(state, piece, to) {
+var defaultApplicator = function(state, piece, to, extraInfo) {
   return state.movePiece(piece, to);
 };
 
@@ -25,7 +25,7 @@ var Rule = function(id, pieceType, functions) {
     });
   };
 
-  //Array of function(state, piece, to) -> state
+  //Array of function(state, piece, to, extraInfo) -> state
   var applicators = [functions.applicators || functions.applicator];
   applicators = _.compact(_.flatten(applicators));
   if(applicators.length == 0) {
@@ -36,11 +36,11 @@ var Rule = function(id, pieceType, functions) {
 
 Rule.defaultApplicator = defaultApplicator;
 
-Rule.prototype.apply = function(state, piece, to) {
+Rule.prototype.apply = function(state, piece, to, extraInfo) {
   var turn = state.turn;
 
   newState = _.reduce(this.applicators, function(state, applicator) {
-    return applicator(state, piece, to);
+    return applicator(state, piece, to, extraInfo);
   }, state);
 
   newState.turn = turn + 1;

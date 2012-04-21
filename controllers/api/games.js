@@ -26,8 +26,12 @@ exports.move = function(req, res) {
     var from = new Position(req.body.from);
     var to   = new Position(req.body.to);
 
+    var extraInfo = {
+      promoteTo: req.body.promoteTo
+    };
+
     var ruleSet = RuleSets.standard;
-    var newState = ruleSet.apply(state, from, to);
+    var newState = ruleSet.apply(state, from, to, extraInfo);
 
     if(!newState) {
       //TODO: Real errors, please

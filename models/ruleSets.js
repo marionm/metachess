@@ -17,7 +17,7 @@ RuleSet.prototype.validMoves = function(state, piece) {
   }, []);
 };
 
-RuleSet.prototype.apply = function(state, from, to) {
+RuleSet.prototype.apply = function(state, from, to, extraInfo) {
   var piece = state.pieceAt(from);
 
   var matchingRules = _.filter(this.rules, function(rule) {
@@ -32,9 +32,10 @@ RuleSet.prototype.apply = function(state, from, to) {
     return false;
   }
 
+  //TODO: What if more than one matches?
   var rule = matchingRules[0];
 
-  return rule.apply(state, piece, to);
+  return rule.apply(state, piece, to, extraInfo);
 };
 
 
@@ -64,13 +65,15 @@ standard.push(new Rule(standard.length, 'pawn', {
   },
   applicators: [
     Rule.defaultApplicator,
-    function(state, piece, to) {
+    function(state, piece, to, extraInfo) {
+      extraInfo = extraInfo || {};
+
       var lastRow = piece.color == 'white' ? 1 : 8;
       if(to.row == lastRow) {
-        //TODO: The promotion piece needs to be selectable by the user
-        var type = 'queen';
+        var type = extraInfo.promoteTo || 'queen';
         state.setPieceAt(Piece.create(type, piece.color), to);
       }
+
       return state;
     }
   ]
@@ -91,9 +94,6 @@ standard.push(new Rule(standard.length, 'pawn', {
 
 //TODO: Needs custom matcher and applicator for en passant
 //      Since it is only valid on the first turn it is available, need knowledge of the turn that created this state
-
-//TODO: Need pawn rules for promotion
-//      How to let the user choose the desired piece? Need something client side - for now, default to queen
 
 standard.push(new Rule(standard.length, 'rook', {
   targeter: function(state, piece) {
