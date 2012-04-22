@@ -1,5 +1,7 @@
 var _ = require('underscore');
 
+var GameState = require('./gameState').model;
+
 var Rule     = require('./rule');
 var Piece    = require('./piece');
 var Position = require('./position');
@@ -32,7 +34,33 @@ RuleSet.prototype.apply = function(state, from, to, extraInfo) {
   //TODO: What if more than one matches?
   var rule = matchingRules[0];
 
-  return rule.apply(state, piece, to, extraInfo);
+  //TODO: Herein lies the problem with mutating the state in apply - always return new state objects!
+  var originalStateString = state.state;
+  var newState = rule.apply(state, piece, to, extraInfo);
+
+  //Special state info for castling, pretty hacky and ugly
+  //TODO: Make this better, it and its helpers suck
+
+  var kingPos = GameState.originalPosition('king', piece.color);
+  if(newState.state[kingPos.index] != originalStateString[kingPos.index]) {
+    newState.setPieceMoved('king', piece.color);
+  }
+
+  var leftRookPos = GameState.originalPosition('rook', piece.color, 'left');
+  if(newState.state[leftRookPos.index] != originalStateString[leftRookPos.index]) {
+    newState.setPieceMoved('rook', piece.color, 'left');
+  }
+
+  var rightRookPos = GameState.originalPosition('rook', piece.color, 'right');
+  if(newState.state[rightRookPos.index] != originalStateString[rightRookPos.index]) {
+    newState.setPieceMoved('rook', piece.color, 'right');
+  }
+
+  for(var i = 0; i < 6; i++) {
+    newState.piecesMoved[i] = newState.piecesMoved[i] || state.piecesMoved[i];
+  }
+
+  return newState;
 };
 
 
@@ -175,16 +203,101 @@ standard.push(new Rule(standard.length, 'king', {
   }
 }));
 
-//TODO: Need castling rule
-//      Since this requires that the king has not yet moved, need to check state history
-//      This requires that these methods have access to:
-//        a) The game object, or
-//        b) Just all previous states (without the game object)
-//        c) Just store whether or not the king has moved on each state
-//           Seems like there are not many good cases for actually having full state history here, so this is simple and easy
+var getOriginalRookPosition = function(color, side) {
+  if(color == 'white') {
+    var row = 8;
+    if(side == 'left') {
+      return new Position(row, 1);
+    } else {
+      return new Position(row, 8);
+    }
+  } else {
+    var row = 1;
+    if(side == 'left') {
+      return new Position(row, 8);
+    } else {
+      return new Position(row, 1);
+    }
+  }
+};
+
+var canCastle = function(state, king, side) {
+  if(state.pieceMoved('king', king.color)) return false;
+  if(state.pieceMoved('rook', king.color, side)) return false;
+
+  //TODO: Implement this or something like it
+  // if(king.inCheck()) return false;
+
+  var rookPos = getOriginalRookPosition(king.color, side);
+  var rook = state.pieceAt(rookPos);
+  if(!rook) return false;
+
+  var kingPos = king.position;
+  var count = side == 'left' ? 3 : 2;
+
+  var emptyCells = [];
+  var checklessCells = [];
+  for(var i = 1; i <= 2; i++) {
+    var cell = kingPos[side](king, i);
+    emptyCells.push(cell);
+    checklessCells.push(cell);
+  }
+
+  if((side == 'left' && king.color == 'white') || (side == 'right' && king.color =='black')) {
+    emptyCells.push(kingPos[side](king, 3));
+  }
+
+  var cellsOccupied = _.any(emptyCells, function(cell) {
+    return state.pieceAt(cell);
+  });
+  if(cellsOccupied) return false;
+
+  //TODO: Implement this or something like it
+  //      Should actually get second cell-check for free, should be able to just do the cell one over
+  // var cellsInCheck = _.any(checklessCells, function(cell) {
+  //   return cell.inCheck(state, turnColor);
+  // });
+  // if(cellsInCheck) return false;
+
+  return true;
+};
+
+standard.push(new Rule(standard.length, 'king', {
+  targeter: function(state, piece) {
+    var moves = [];
+
+    _.each(['left', 'right'], function(side) {
+      if(canCastle(state, piece, side)) {
+        moves.push(piece.position[side](piece, 2));
+      }
+    });
+
+    return moves;
+  },
+  applicators: [
+    Rule.defaultApplicator,
+    function(state, piece, to) {
+      var side, rookTo;
+      if(to.right(piece, 2).index == piece.position.index) {
+        side = 'left';
+        rookTo = to.right(piece, 1);
+      } else {
+        side = 'right';
+        rookTo = to.left(piece, 1);
+      }
+
+      var rookPos = GameState.originalPosition('rook', piece.color, side);
+      var rook = state.pieceAt(rookPos);
+      state.movePiece(rook, rookTo);
+
+      return state;
+    }
+  ]
+}));
 
 //TODO: Need general rule that checks for check states to force player to block, and prevents putting self in check state
-
+//        So, should actually calculate valid moves for both colors, and ensure the opponent has no valid moves into the king's position
+//      Perhaps this would make more sense in GameState?
 
 module.exports = {
   model:    RuleSet,

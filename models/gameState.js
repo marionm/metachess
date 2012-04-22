@@ -1,7 +1,8 @@
 var _ = require('underscore');
 var mongoose = require('mongoose');
 
-var Piece = require('./piece');
+var Piece    = require('./piece');
+var Position = require('./position');
 
 var MoveSchema = new mongoose.Schema({
   type:  String,
@@ -13,8 +14,53 @@ var MoveSchema = new mongoose.Schema({
 var Schema = new mongoose.Schema({
   state:        { type: String, default: '89abca9877777777000000000000000000000000000000001111111123456432' },
   turn:         { type: Number, default: 0 },
-  previousMove: [MoveSchema]
+  previousMove: [MoveSchema],
+
+  //For castling checks
+  piecesMoved: [Boolean]
 });
+
+var pieceMovedIndex = function(type, color, side) {
+  if(type != 'king' && type != 'rook') return -1;
+
+  var index = color == 'white' ? 0 : 1;
+  if(type == 'rook') {
+    index += side == 'left' ? 2 : 4;
+  }
+
+  return index;
+};
+
+//Just used for castle state maintenance, not complete enough for use anywhere else
+Schema.statics.originalPosition = function(type, color, side) {
+  var row, col;
+  if(color == 'white') {
+    var row = 8;
+    if(type == 'king') {
+      col = 5;
+    } else if(type == 'rook') {
+      col = side == 'left' ? 1 : 8;
+    }
+  } else {
+    var row = 1;
+    if(type == 'king') {
+      col = 5;
+    } else if(type == 'rook') {
+      col = side == 'left' ? 8 : 1;
+    }
+  }
+  return new Position(row, col);
+};
+
+Schema.methods.pieceMoved = function(type, color, side) {
+  var index = pieceMovedIndex(type, color, side);
+  return this.piecesMoved[index];
+};
+
+Schema.methods.setPieceMoved = function(type, color, side) {
+  var index = pieceMovedIndex(type, color, side);
+  this.piecesMoved[index] = true;
+};
 
 Schema.methods.validMoves = function(ruleSet) {
   var moves = {};
