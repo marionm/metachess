@@ -1,7 +1,8 @@
 var _ = require('underscore');
 
-var Rule  = require('./rule');
-var Piece = require('./piece');
+var Rule     = require('./rule');
+var Piece    = require('./piece');
+var Position = require('./position');
 
 //TODO: Convert to Mongoose model maybe
 var RuleSet = function(rules) {
@@ -21,10 +22,6 @@ RuleSet.prototype.apply = function(state, from, to, extraInfo) {
   var piece = state.pieceAt(from);
 
   var matchingRules = _.filter(this.rules, function(rule) {
-    //TODO: Need prior move, for en passant
-    //      This means it needs to be either:
-    //        a) infered from previous state (potentially complex if non-standard rules are enabled), or
-    //        b) provided by the client (and therefore verified)
     return rule.matches(state, piece, to);
   });
 
@@ -92,8 +89,36 @@ standard.push(new Rule(standard.length, 'pawn', {
   }
 }));
 
-//TODO: Needs custom matcher and applicator for en passant
-//      Since it is only valid on the first turn it is available, need knowledge of the turn that created this state
+standard.push(new Rule(standard.length, 'pawn', {
+  targeter: function(state, piece) {
+    var move = state.previousMove[0];
+    if(move && move.type == 'pawn') {
+      var pawn = Piece.create(move.type, move.color);
+      var from = new Position(move.from);
+      var to   = new Position(move.to);
+
+      if(from.forward(pawn, 2).index == to.index) {
+        var left  = to.left(pawn);
+        var right = to.right(pawn);
+
+        if(
+          (left.onBoard  && left.index == piece.position.index) ||
+          (right.onBoard && right.index == piece.position.index)
+        ) {
+          return [to.backward(pawn)];
+        }
+      }
+    }
+    return [];
+  },
+  applicators: [
+    Rule.defaultApplicator,
+    function(state, piece, to) {
+      state.setPieceAt(null, to.backward(piece));
+      return state;
+    }
+  ]
+}));
 
 standard.push(new Rule(standard.length, 'rook', {
   targeter: function(state, piece) {
@@ -155,7 +180,8 @@ standard.push(new Rule(standard.length, 'king', {
 //      This requires that these methods have access to:
 //        a) The game object, or
 //        b) Just all previous states (without the game object)
-//      Choice a sounds more flexible and cleaner
+//        c) Just store whether or not the king has moved on each state
+//           Seems like there are not many good cases for actually having full state history here, so this is simple and easy
 
 //TODO: Need general rule that checks for check states to force player to block, and prevents putting self in check state
 

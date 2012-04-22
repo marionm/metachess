@@ -44,6 +44,14 @@ Rule.prototype.apply = function(state, piece, to, extraInfo) {
   }, state);
 
   newState.turn = turn + 1;
+
+  newState.previousMove = {
+    type:  piece.type,
+    color: piece.color,
+    from:  piece.position.index,
+    to:    to.index
+  };
+
   return newState;
 };
 

@@ -3,9 +3,17 @@ var mongoose = require('mongoose');
 
 var Piece = require('./piece');
 
+var MoveSchema = new mongoose.Schema({
+  type:  String,
+  color: String,
+  from:  Number,
+  to:    Number
+});
+
 var Schema = new mongoose.Schema({
-  state: { type: String, default: '89abca9877777777000000000000000000000000000000001111111123456432' },
-  turn:  { type: Number, default: 0 }
+  state:        { type: String, default: '89abca9877777777000000000000000000000000000000001111111123456432' },
+  turn:         { type: Number, default: 0 },
+  previousMove: [MoveSchema]
 });
 
 Schema.methods.validMoves = function(ruleSet) {
