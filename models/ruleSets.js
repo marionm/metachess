@@ -12,16 +12,14 @@ var RuleSet = function(rules) {
 };
 
 RuleSet.prototype.validMoves = function(state, piece, allowCheckStates) {
-  var that = this;
-
   return _.reduce(this.rules, function(moves, rule) {
     if(rule.pieceType == piece.type) {
-      var targets = rule.targets(state, piece);
+      var targets = rule.targets(state, piece, allowCheckStates);
 
       if(!allowCheckStates) {
         targets = _.reject(targets, function(target) {
           var resultingState = rule.apply(state.clone(), piece, target);
-          return resultingState.inCheck(that, piece.color);
+          return resultingState.inCheck(piece.color);
         });
       }
 
@@ -230,12 +228,9 @@ var getOriginalRookPosition = function(color, side) {
   }
 };
 
-var canCastle = function(state, king, side) {
+var canCastle = function(state, king, side, allowCheckStates) {
   if(state.pieceMoved('king', king.color)) return false;
   if(state.pieceMoved('rook', king.color, side)) return false;
-
-  //TODO: Implement this or something like it
-  // if(king.inCheck()) return false;
 
   var rookPos = getOriginalRookPosition(king.color, side);
   var rook = state.pieceAt(rookPos);
@@ -245,13 +240,10 @@ var canCastle = function(state, king, side) {
   var count = side == 'left' ? 3 : 2;
 
   var emptyCells = [];
-  var checklessCells = [];
   for(var i = 1; i <= 2; i++) {
     var cell = kingPos[side](king, i);
     emptyCells.push(cell);
-    checklessCells.push(cell);
   }
-
   if((side == 'left' && king.color == 'white') || (side == 'right' && king.color =='black')) {
     emptyCells.push(kingPos[side](king, 3));
   }
@@ -261,22 +253,24 @@ var canCastle = function(state, king, side) {
   });
   if(cellsOccupied) return false;
 
-  //TODO: Implement this or something like it
-  //      Should actually get second cell-check for free, should be able to just do the cell one over
-  // var cellsInCheck = _.any(checklessCells, function(cell) {
-  //   return cell.inCheck(state, turnColor);
-  // });
-  // if(cellsInCheck) return false;
+  if(!allowCheckStates) {
+    if(state.inCheck(king.color)) return false;
+
+    var intermediateCell = kingPos[side](king);
+    var intermediateState = state.clone().movePiece(king, intermediateCell);
+    if(intermediateState.inCheck(king.color)) return false;
+  }
 
   return true;
 };
 
 standard.push(new Rule(standard.length, 'king', {
-  targeter: function(state, piece) {
+  //TODO: Signature is a hack, clean up if possible
+  targeter: function(state, piece, allowCheckStates) {
     var moves = [];
 
     _.each(['left', 'right'], function(side) {
-      if(canCastle(state, piece, side)) {
+      if(canCastle(state, piece, side, allowCheckStates)) {
         moves.push(piece.position[side](piece, 2));
       }
     });

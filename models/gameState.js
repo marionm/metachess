@@ -68,7 +68,9 @@ Schema.methods.findKing = function(color) {
   });
 };
 
-Schema.methods.inCheck = function(ruleSet, color) {
+Schema.methods.inCheck = function(color, ruleSet) {
+  ruleSet = ruleSet || this.ruleSet;
+
   var king = this.findKing(color);
 
   var enemyColor = color == 'white' ? 'black' : 'white';
@@ -82,6 +84,10 @@ Schema.methods.inCheck = function(ruleSet, color) {
 };
 
 Schema.methods.validMoves = function(ruleSet, color, allowCheckStates) {
+  //Used later in inCheck method
+  //TODO: Ugh, really?
+  this.ruleSet = ruleSet;
+
   var moves = {};
 
   var that = this;
@@ -160,12 +166,17 @@ Schema.methods.setPieceAt = function(piece, position) {
 };
 
 Schema.methods.clone = function() {
-  return new GameState({
+  var state = new GameState({
     state: this.state,
     turn:  this.turn,
     previousMove: this.previousMove,
     piecesMoved:  this.piecesMoved
   });
+
+  //TODO: Ugggggh
+  state.ruleSet = this.ruleSet;
+
+  return state;
 };
 
 var GameState = mongoose.model('GameState', Schema);
