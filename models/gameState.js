@@ -62,17 +62,39 @@ Schema.methods.setPieceMoved = function(type, color, side) {
   this.piecesMoved[index] = true;
 };
 
-Schema.methods.validMoves = function(ruleSet) {
+Schema.methods.findKing = function(color) {
+  return _.find(this.pieces(), function(piece) {
+    return piece.type == 'king' && piece.color == color;
+  });
+};
+
+Schema.methods.inCheck = function(ruleSet, color) {
+  var king = this.findKing(color);
+
+  var enemyColor = color == 'white' ? 'black' : 'white';
+  var enemyMoves = this.validMoves(ruleSet, enemyColor, true);
+
+  return _.any(enemyMoves, function(moves) {
+    return _.any(moves, function(move) {
+      return move == king.position.index;
+    });
+  });
+};
+
+Schema.methods.validMoves = function(ruleSet, color, allowCheckStates) {
   var moves = {};
+
   var that = this;
-  var turnColor = this.turnColor();
+  var turnColor = color || this.turnColor();
 
   _.each(this.pieces(), function(piece) {
     if(piece.color == turnColor) {
-      var positions = ruleSet.validMoves(that, piece);
+      var positions = ruleSet.validMoves(that, piece, allowCheckStates);
+
       var indexes = _.map(positions, function(position) {
         return position.index;
       });
+
       moves[piece.position.index] = indexes;
     }
   });

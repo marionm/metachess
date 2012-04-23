@@ -11,10 +11,21 @@ var RuleSet = function(rules) {
   this.rules = rules;
 };
 
-RuleSet.prototype.validMoves = function(state, piece) {
+RuleSet.prototype.validMoves = function(state, piece, allowCheckStates) {
+  var that = this;
+
   return _.reduce(this.rules, function(moves, rule) {
     if(rule.pieceType == piece.type) {
-      moves.push.apply(moves, rule.targets(state, piece));
+      var targets = rule.targets(state, piece);
+
+      if(!allowCheckStates) {
+        targets = _.reject(targets, function(target) {
+          var resultingState = rule.apply(state.clone(), piece, target);
+          return resultingState.inCheck(that, piece.color);
+        });
+      }
+
+      moves.push.apply(moves, targets);
     }
     return moves;
   }, []);
