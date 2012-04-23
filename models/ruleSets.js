@@ -34,25 +34,23 @@ RuleSet.prototype.apply = function(state, from, to, extraInfo) {
   //TODO: What if more than one matches?
   var rule = matchingRules[0];
 
-  //TODO: Herein lies the problem with mutating the state in apply - always return new state objects!
-  var originalStateString = state.state;
   var newState = rule.apply(state, piece, to, extraInfo);
 
   //Special state info for castling, pretty hacky and ugly
   //TODO: Make this better, it and its helpers suck
 
   var kingPos = GameState.originalPosition('king', piece.color);
-  if(newState.state[kingPos.index] != originalStateString[kingPos.index]) {
+  if(newState.state[kingPos.index] != state.state[kingPos.index]) {
     newState.setPieceMoved('king', piece.color);
   }
 
   var leftRookPos = GameState.originalPosition('rook', piece.color, 'left');
-  if(newState.state[leftRookPos.index] != originalStateString[leftRookPos.index]) {
+  if(newState.state[leftRookPos.index] != state.state[leftRookPos.index]) {
     newState.setPieceMoved('rook', piece.color, 'left');
   }
 
   var rightRookPos = GameState.originalPosition('rook', piece.color, 'right');
-  if(newState.state[rightRookPos.index] != originalStateString[rightRookPos.index]) {
+  if(newState.state[rightRookPos.index] != state.state[rightRookPos.index]) {
     newState.setPieceMoved('rook', piece.color, 'right');
   }
 

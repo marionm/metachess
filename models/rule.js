@@ -39,9 +39,9 @@ Rule.defaultApplicator = defaultApplicator;
 Rule.prototype.apply = function(state, piece, to, extraInfo) {
   var turn = state.turn;
 
-  newState = _.reduce(this.applicators, function(state, applicator) {
-    return applicator(state, piece, to, extraInfo);
-  }, state);
+  var newState = _.reduce(this.applicators, function(reducingState, applicator) {
+    return applicator(reducingState, piece, to, extraInfo);
+  }, state.clone());
 
   newState.turn = turn + 1;
 

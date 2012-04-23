@@ -129,13 +129,21 @@ Schema.methods.setPieceAt = function(piece, position) {
   //TODO: Need to push this type of thing into Piece
   code = code.toString(16);
 
-
   this.state =
     this.state.substr(0, index) +
     code +
     this.state.substr(index + 1, 64 - index);
 
   return this;
+};
+
+Schema.methods.clone = function() {
+  return new GameState({
+    state: this.state,
+    turn:  this.turn,
+    previousMove: this.previousMove,
+    piecesMoved:  this.piecesMoved
+  });
 };
 
 var GameState = mongoose.model('GameState', Schema);
