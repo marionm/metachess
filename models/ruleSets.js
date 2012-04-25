@@ -29,6 +29,14 @@ RuleSet.prototype.validMoves = function(state, piece, allowCheckStates) {
   }, []);
 };
 
+var setPieceMoved = function(oldState, newState, pieceType, color, side) {
+  var position = GameState.originalPosition(pieceType, color, side);
+  var index = position.index;
+  if(newState.state[index] != oldState.state[index]) {
+    newState.setPieceMoved(pieceType, color, side);
+  }
+}
+
 RuleSet.prototype.apply = function(state, from, to, extraInfo) {
   var piece = state.pieceAt(from);
 
@@ -45,27 +53,13 @@ RuleSet.prototype.apply = function(state, from, to, extraInfo) {
 
   var newState = rule.apply(state, piece, to, extraInfo);
 
-  //Special state info for castling, pretty hacky and ugly
-  //TODO: Make this better, it and its helpers suck
-
-  var kingPos = GameState.originalPosition('king', piece.color);
-  if(newState.state[kingPos.index] != state.state[kingPos.index]) {
-    newState.setPieceMoved('king', piece.color);
-  }
-
-  var leftRookPos = GameState.originalPosition('rook', piece.color, 'left');
-  if(newState.state[leftRookPos.index] != state.state[leftRookPos.index]) {
-    newState.setPieceMoved('rook', piece.color, 'left');
-  }
-
-  var rightRookPos = GameState.originalPosition('rook', piece.color, 'right');
-  if(newState.state[rightRookPos.index] != state.state[rightRookPos.index]) {
-    newState.setPieceMoved('rook', piece.color, 'right');
-  }
-
-  for(var i = 0; i < 6; i++) {
-    newState.piecesMoved[i] = newState.piecesMoved[i] || state.piecesMoved[i];
-  }
+  //Special state tracking for castling
+  _.each(['white', 'black'], function(color) {
+    setPieceMoved(state, newState, 'king', color);
+    _.each(['left', 'right'], function(side) {
+      setPieceMoved(state, newState, 'rook', color, side);
+    });
+  });
 
   return newState;
 };
@@ -74,6 +68,7 @@ RuleSet.prototype.apply = function(state, from, to, extraInfo) {
 
 var standard = [];
 
+//Standard pawn movement
 standard.push(new Rule(standard.length, 'pawn', {
   targeter: function(state, piece) {
     var moves = [];
@@ -111,6 +106,7 @@ standard.push(new Rule(standard.length, 'pawn', {
   ]
 }));
 
+//Opening pawn movement
 standard.push(new Rule(standard.length, 'pawn', {
   targeter: function(state, piece) {
     var startingRow = piece.color == 'white' ? 7 : 2;
@@ -124,6 +120,7 @@ standard.push(new Rule(standard.length, 'pawn', {
   }
 }));
 
+//En passant
 standard.push(new Rule(standard.length, 'pawn', {
   targeter: function(state, piece) {
     var move = state.previousMove[0];
@@ -155,6 +152,7 @@ standard.push(new Rule(standard.length, 'pawn', {
   ]
 }));
 
+//Standard rook movement
 standard.push(new Rule(standard.length, 'rook', {
   targeter: function(state, piece) {
     var directions = ['forward', 'backward', 'left', 'right'];
@@ -162,6 +160,7 @@ standard.push(new Rule(standard.length, 'rook', {
   }
 }));
 
+//Standard knight movement
 standard.push(new Rule(standard.length, 'knight', {
   targeter: function(state, piece) {
     var moves = [];
@@ -189,6 +188,7 @@ standard.push(new Rule(standard.length, 'knight', {
   }
 }));
 
+//Standard bishop movement
 standard.push(new Rule(standard.length, 'bishop', {
   targeter: function(state, piece) {
     var directions = ['forwardLeft', 'forwardRight', 'backwardLeft', 'backwardRight'];
@@ -196,6 +196,7 @@ standard.push(new Rule(standard.length, 'bishop', {
   }
 }));
 
+//Standard queen movement
 standard.push(new Rule(standard.length, 'queen', {
   targeter: function(state, piece) {
     var directions = ['forward', 'backward', 'left', 'right', 'forwardLeft', 'forwardRight', 'backwardLeft', 'backwardRight'];
@@ -203,6 +204,7 @@ standard.push(new Rule(standard.length, 'queen', {
   }
 }));
 
+//Standard king movement
 standard.push(new Rule(standard.length, 'king', {
   targeter: function(state, piece) {
     var directions = ['forward', 'backward', 'left', 'right', 'forwardLeft', 'forwardRight', 'backwardLeft', 'backwardRight'];
@@ -264,6 +266,7 @@ var canCastle = function(state, king, side, allowCheckStates) {
   return true;
 };
 
+//Castling
 standard.push(new Rule(standard.length, 'king', {
   //TODO: Signature is a hack, clean up if possible
   targeter: function(state, piece, allowCheckStates) {
@@ -297,10 +300,6 @@ standard.push(new Rule(standard.length, 'king', {
     }
   ]
 }));
-
-//TODO: Need general rule that checks for check states to force player to block, and prevents putting self in check state
-//        So, should actually calculate valid moves for both colors, and ensure the opponent has no valid moves into the king's position
-//      Perhaps this would make more sense in GameState?
 
 module.exports = {
   model:    RuleSet,
