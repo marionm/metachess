@@ -151,7 +151,7 @@ Schema.methods.movePiece = function(piece, to) {
 };
 
 Schema.methods.setPieceAt = function(piece, position) {
-  var index = position.index;
+  var index = parseInt(position.index);
 
   var code = piece ? piece.code : 0;
   //TODO: Need to push this type of thing into Piece
