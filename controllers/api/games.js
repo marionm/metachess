@@ -31,6 +31,9 @@ exports.move = function(req, res) {
     };
 
     var ruleSet = RuleSets.standard;
+    //Set ruleSet on the state so it is available in inCheck later, necessary for castling
+    //TODO: Ugh, really?
+    state.ruleSet = ruleSet;
     var newState = ruleSet.apply(state, from, to, extraInfo);
 
     if(!newState) {
