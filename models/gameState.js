@@ -69,6 +69,7 @@ Schema.methods.findKing = function(color) {
 };
 
 Schema.methods.inCheck = function(color, ruleSet) {
+  var that = this;
   ruleSet = ruleSet || this.ruleSet;
 
   var king = this.findKing(color);
@@ -76,9 +77,12 @@ Schema.methods.inCheck = function(color, ruleSet) {
   var enemyColor = color == 'white' ? 'black' : 'white';
   var enemyMoves = this.validMoves(ruleSet, enemyColor, true);
 
-  return _.any(enemyMoves, function(moves) {
-    return _.any(moves, function(move) {
-      return move == king.position.index;
+  return _.any(enemyMoves, function(moves, fromIndex) {
+    var from = new Position(fromIndex);
+    return _.any(moves, function(toIndex) {
+      var to = new Position(toIndex);
+      var state = ruleSet.apply(that, from, to);
+      return state.findKing(color) == undefined;
     });
   });
 };
