@@ -1,3 +1,31 @@
+sockets
+
+  server
+    listen to move, take existing params
+    emit result on game id
+      for invalid moves, will have to ignore for the non-moving player
+
+  client
+    connect on page load
+
+    player
+      emit to move with existing params
+      listen on game id
+      need to have login so people have a list of games they're playing
+        this is so:
+          random people can observe, whereas only the players can play (and resume)
+          client knows which color to play as
+
+    observer
+      listen on game id
+
+
+performance
+  got slow with the newer in-check calcs
+  why so much slower?
+    object creation?
+
+
 sever side
 
   state model

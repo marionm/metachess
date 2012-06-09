@@ -1,3 +1,5 @@
+//TODO: Modularize code
+
 //TODO: Cells should be models, too? This is getting messy
 var prepareBoard = function() {
   $('.board .cell').droppable({

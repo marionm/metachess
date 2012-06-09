@@ -4,6 +4,9 @@ h2= game.id
 !=partial('games/_promotionDialog');
 
 script
-  window.game = new Game({
-    id: '#{game.id}'
+  //TODO: Waiting for socket.io client library to load - enforce load order instead?
+  $(document).ready(function() {
+    window.game = new Game({
+      id: '#{game.id}'
+    });
   });

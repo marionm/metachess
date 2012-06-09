@@ -1,4 +1,13 @@
 var Move = Backbone.Model.extend({
+  sync: function(method, model, options) {
+    //Can't emit the model with the socket in it
+    //It only lives for a single request, so this is ok
+    var socket = model.get('socket');
+    model.unset('socket');
+
+    socket.emit('move', model);
+  },
+
   url: function() {
     return '/api/games/' + this.get('gameId') + '/move';
   },

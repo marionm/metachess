@@ -1,6 +1,27 @@
 var Game = Backbone.Model.extend({
   urlRoot: '/api/games',
 
+  initialize: function() {
+    var endpoint = window.location.protocol + '//' + window.location.hostname;
+    var socket = io.connect(endpoint);;
+
+    var game = this;
+    socket.on(this.get('id'), function(data) {
+      //FIXME: Better error detection
+      if(data != 'nope') {
+        game.success(data);
+      }
+    });
+
+    this.set('socket', socket);
+  },
+
+  success: function(res) {
+    var state = new GameState(res.gameState);
+    game.get('states').push(state);
+    state.render();
+  },
+
   postFetch: function() {
     var states = [];
     var lastState;
@@ -24,15 +45,11 @@ var Game = Backbone.Model.extend({
       gameId: this.id,
       piece:  piece,
       from:   piece.get('position'),
-      to:     to
+      to:     to,
+      socket: this.get('socket')
     });
 
     var game = this;
-    var success = function(move, res) {
-      var state = new GameState(res.gameState);
-      game.get('states').push(state);
-      state.render();
-    };
 
     if(move.promotion()) {
       showDialog('#promotionDialog', 'Promote pawn to...', {
@@ -45,11 +62,11 @@ var Game = Backbone.Model.extend({
           var type = $('input:checked', this).val();
           move.set('promoteTo', type);
 
-          move.save({}, { success: success });
+          move.save();
         }
       });
     } else {
-      move.save({}, { success: success });
+      move.save();
     }
   }
 

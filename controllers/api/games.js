@@ -19,15 +19,15 @@ exports.show = function(req, res) {
   });
 };
 
-exports.move = function(req, res) {
-  Game.findById(req.params.gameId, function(err, game) {
+exports.move = function(sockets, data) {
+  Game.findById(data.gameId, function(err, game) {
     var state = game.currentState();
 
-    var from = new Position(req.body.from);
-    var to   = new Position(req.body.to);
+    var from = new Position(data.from);
+    var to   = new Position(data.to);
 
     var extraInfo = {
-      promoteTo: req.body.promoteTo
+      promoteTo: data.promoteTo
     };
 
     var ruleSet = RuleSets.standard;
@@ -38,7 +38,7 @@ exports.move = function(req, res) {
 
     if(!newState) {
       //TODO: Real errors, please
-      res.send('nope');
+      sockets.emit(data.gameId, 'nope');
       return;
     }
 
@@ -57,7 +57,7 @@ exports.move = function(req, res) {
     game.states.push(newState);
     game.save(function(err, game) {
       //TODO: Handle errors
-      res.send(response);
+      sockets.emit(data.gameId, response);
     });
 
   });
