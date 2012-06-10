@@ -2,7 +2,6 @@ var c = '../controllers/';
 var a = c + 'api/';
 
 var views = {
-  index: require(c + 'index'),
   games: require(c + 'games'),
   turns: require(c + 'turns')
 }
@@ -12,7 +11,7 @@ var api = {
 }
 
 module.exports = function(app) {
-  app.all('/', views.index.index);
+  app.all('/', views.games.index);
 
   app.get( '/games',     views.games.index);
   app.get( '/games/:id', views.games.show);
