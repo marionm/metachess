@@ -1,12 +1,12 @@
 table.board {
   border-collapse: collapse; }
   table.board td {
-    height: 50px;
-    width: 50px;
+    height: 64px;
+    width: 64px;
     border: solid 1px black; }
   table.board .cell {
-    height: 50px;
-    width: 50px; }
+    height: 64px;
+    width: 64px; }
     table.board .cell.original {
       background-color: darkgoldenrod; }
     table.board .cell.piece-hover {
@@ -14,8 +14,32 @@ table.board {
     table.board .cell.valid-drag, table.board .cell.valid-mouseover {
       background-color: darkGrey; }
   table.board .piece {
-    height: 50px;
-    width: 50px;
+    height: 64px;
+    width: 64px;
     text-align: center;
     vertical-align: middle;
     cursor: pointer; }
+    table.board .piece.black.pawn {
+      background-image: url("/images/pieces/black-pawn.png"); }
+    table.board .piece.black.rook {
+      background-image: url("/images/pieces/black-rook.png"); }
+    table.board .piece.black.knight {
+      background-image: url("/images/pieces/black-knight.png"); }
+    table.board .piece.black.bishop {
+      background-image: url("/images/pieces/black-bishop.png"); }
+    table.board .piece.black.queen {
+      background-image: url("/images/pieces/black-queen.png"); }
+    table.board .piece.black.king {
+      background-image: url("/images/pieces/black-king.png"); }
+    table.board .piece.white.pawn {
+      background-image: url("/images/pieces/white-pawn.png"); }
+    table.board .piece.white.rook {
+      background-image: url("/images/pieces/white-rook.png"); }
+    table.board .piece.white.knight {
+      background-image: url("/images/pieces/white-knight.png"); }
+    table.board .piece.white.bishop {
+      background-image: url("/images/pieces/white-bishop.png"); }
+    table.board .piece.white.queen {
+      background-image: url("/images/pieces/white-queen.png"); }
+    table.board .piece.white.king {
+      background-image: url("/images/pieces/white-king.png"); }

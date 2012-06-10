@@ -1,15 +1,13 @@
 var Piece = Backbone.Model.extend({
-  name: function() {
-    return this.get('color') + ' ' + this.get('type');
-  },
-
   getCell: function() {
     return $('#cell' + this.get('position'));
   },
 
   //TODO: The following methods probably belong in a view
   toHtml: function() {
-    return '<div id="piece' + this.cid + '" class="piece" data-piece-id="' + this.cid + '">' + this.name() + '</div>';
+    var id = 'piece' + this.cid;
+    var css = 'piece ' + this.get('color') + ' ' + this.get('type');
+    return '<div id="' + id + '" class="' + css + '" data-piece-id="' + this.cid + '"></div>';
   },
 
   setValidCellClass: function(currentCell, cssClass) {

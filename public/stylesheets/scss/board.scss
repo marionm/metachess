@@ -1,6 +1,6 @@
 @mixin cell-size {
-  height: 50px;
-  width: 50px;
+  height: 64px;
+  width: 64px;
 }
 
 table.board {
@@ -35,5 +35,24 @@ table.board {
     vertical-align: middle;
 
     cursor: pointer;
+
+    //FIXME: Need a sprite
+    &.black {
+      &.pawn   { background-image: url('/images/pieces/black-pawn.png'); }
+      &.rook   { background-image: url('/images/pieces/black-rook.png'); }
+      &.knight { background-image: url('/images/pieces/black-knight.png'); }
+      &.bishop { background-image: url('/images/pieces/black-bishop.png'); }
+      &.queen  { background-image: url('/images/pieces/black-queen.png'); }
+      &.king   { background-image: url('/images/pieces/black-king.png'); }
+    }
+    &.white {
+      &.pawn   { background-image: url('/images/pieces/white-pawn.png'); }
+      &.rook   { background-image: url('/images/pieces/white-rook.png'); }
+      &.knight { background-image: url('/images/pieces/white-knight.png'); }
+      &.bishop { background-image: url('/images/pieces/white-bishop.png'); }
+      &.queen  { background-image: url('/images/pieces/white-queen.png'); }
+      &.king   { background-image: url('/images/pieces/white-king.png'); }
+    }
   }
+
 }
