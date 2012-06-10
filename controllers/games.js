@@ -1,5 +1,6 @@
 var Game = require('../models/game').model;
 var GameState = require('../models/gameState').model;
+var GameCounter = require('../models/gameCounter');
 
 var show = function(req, res, game) {
   res.render('games/show', {
@@ -16,14 +17,18 @@ exports.index = function(req, res) {
 }
 
 exports.show = function(req, res) {
-  Game.findById(req.params.id, function(err, game) {
-    show(req, res, game);
+  Game.find({ number: req.params.id }, function(err, games) {
+    show(req, res, games[0]);
   });
 }
 
 exports.create = function(req, res) {
-  var game = new Game();
-  game.save(function() {
-    res.redirect('/games/' + game.id);
+  GameCounter.next(function(gameId) {
+    var game = new Game({
+      number: gameId
+    });
+    game.save(function() {
+      res.redirect('/games/' + gameId);
+    });
   });
 }

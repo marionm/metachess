@@ -4,6 +4,7 @@ var mongoose = require('mongoose');
 var GameState = require('./gameState');
 
 var Schema = new mongoose.Schema({
+  number: Number,
   states: [GameState.schema]
 });
 
