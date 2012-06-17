@@ -1,2 +1,8 @@
 .dialog {
   display: none; }
+
+dl dt {
+  font-weight: bold;
+  float: left; }
+dl dd {
+  margin-left: 100px; }

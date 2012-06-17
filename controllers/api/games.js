@@ -19,7 +19,7 @@ exports.show = function(req, res) {
   });
 };
 
-exports.move = function(sockets, data) {
+exports.move = function(data, callback) {
   Game.findById(data.gameId, function(err, game) {
     var state = game.currentState();
 
@@ -38,7 +38,7 @@ exports.move = function(sockets, data) {
 
     if(!newState) {
       //TODO: Real errors, please
-      sockets.emit(data.gameId, 'nope');
+      callback('nope');
       return;
     }
 
@@ -57,7 +57,7 @@ exports.move = function(sockets, data) {
     game.states.push(newState);
     game.save(function(err, game) {
       //TODO: Handle errors
-      sockets.emit(data.gameId, response);
+      callback(response);
     });
 
   });

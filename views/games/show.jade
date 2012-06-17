@@ -3,6 +3,8 @@ h2 Game ##{game.number}
 !=partial('games/_board')
 !=partial('games/_promotionDialog');
 
+!=partial('games/_playerList');
+
 script
   //TODO: Waiting for socket.io client library to load - enforce load order instead?
   $(document).ready(function() {

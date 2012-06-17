@@ -3,15 +3,71 @@ var Game = Backbone.Model.extend({
 
   initialize: function() {
     var endpoint = window.location.protocol + '//' + window.location.hostname;
-    var socket = io.connect(endpoint);;
+    var socket = io.connect(endpoint);
 
     var game = this;
-    socket.on(this.get('id'), function(data) {
+    var id = this.get('id');
+    socket.on(id + 'moved', function(data) {
       //FIXME: Better error detection
       if(data != 'nope') {
         game.success(data);
       }
     });
+
+    socket.on(id + 'playerJoined', function(data) {
+      if(data.type == 'white') {
+        $('#whitePlayer').text('Playing');
+      } else if(data.type == 'black') {
+        $('#blackPlayer').text('Playing');
+      } else {
+        var spectatorCount = $('#spectatorCount');
+        var count = parseInt(spectatorCount.text());
+        if(isNaN(count)) {
+          spectatorCount.text(1);
+        } else {
+          spectatorCount.text(count + 1);
+        }
+      }
+    });
+
+    socket.on(id + 'playerLeft', function(data) {
+      if(data.type == 'white') {
+        $('#whitePlayer').text('Not playing');
+      } else if(data.type == 'black') {
+        $('#blackPlayer').text('Not playing');
+      } else {
+        var spectatorCount = $('#spectatorCount');
+        var count = parseInt(spectatorCount.text());
+        if(isNaN(count)) {
+          spectatorCount.text(0);
+        } else {
+          spectatorCount.text(count - 1);
+        }
+      }
+    });
+
+
+    socket.on('joined', function(data) {
+      //FIXME: Really need a separate player model, and probably need to extract all socket interaction more cleanly
+      game.set('player', {
+        id:   data.player.id,
+        type: data.player.type
+      });
+
+      if(data.currentPlayers) {
+        if(data.currentPlayers.white) {
+          $('#whitePlayer').text('Playing');
+        }
+        if(data.currentPlayers.black) {
+          $('#blackPlayer').text('Playing');
+        }
+        if(data.currentPlayers.spectatorCount) {
+          $('#spectatorCount').text(data.currentPlayers.spectatorCount);
+        }
+      }
+    });
+
+    socket.emit('join', { gameId: id });
 
     this.set('socket', socket);
   },
