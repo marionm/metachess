@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 
-module.exports = function(app, express) {
+module.exports = function(app, express, io) {
   app.configure(function(){
     app.set('views', __dirname + '/../views');
     app.set('view engine', 'jade');
@@ -18,5 +18,12 @@ module.exports = function(app, express) {
   app.configure('production', function(){
     app.use(express.errorHandler());
     mongoose.connect('mongodb://temp:password@staff.mongohq.com:10018/app4036118');
+
+    //Heroku cedar stack doesn't support websockets, use long polling instead
+    io.configure(function() {
+      io.set('transports', ['xhr-polling']);
+      io.set('polling duration', 10);
+    });
+
   });
 }

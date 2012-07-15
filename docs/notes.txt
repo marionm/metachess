@@ -1,5 +1,7 @@
 sockets
 
+  how does player leaving need to work at heroku with long polling?
+
   server
     listen to move, take existing params
     emit result on game id
