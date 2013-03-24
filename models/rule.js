@@ -32,6 +32,10 @@ var Rule = function(id, pieceType, functions) {
     applicators.push(defaultApplicator);
   }
   this.applicators = applicators;
+
+  this.enabledForState = functions.enabledForState || function() {
+    return true;
+  };
 };
 
 Rule.defaultApplicator = defaultApplicator;
@@ -54,6 +58,10 @@ Rule.prototype.apply = function(state, piece, to, extraInfo) {
 
   return newState;
 };
+
+Rule.prototype.isEnabled = function(state) {
+  return this.enabledForState(state);
+}
 
 Rule.validDirectionalMoves = function(state, piece, directions, continuous) {
   continuous = !!continuous;

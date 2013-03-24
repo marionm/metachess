@@ -18,7 +18,7 @@ var setPieceMoved = function(oldState, newState, pieceType, color, side) {
 
 RuleSet.prototype.validMoves = function(state, piece, allowCheckStates) {
   return _.reduce(this.rules, function(moves, rule) {
-    if(rule.pieceType == piece.type) {
+    if(rule.isEnabled(state) && rule.pieceType == piece.type) {
       var targets = rule.targets(state, piece, allowCheckStates);
 
       if(!allowCheckStates) {
