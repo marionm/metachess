@@ -1,5 +1,6 @@
 // TODO: Iterate over the contents of the folder
 var dir = './ruleSets';
 module.exports = {
-  standard: require(dir + '/standard').ruleSet
+  standard: require(dir + '/standard').ruleSet,
+  metachessDefault: require(dir + '/metachessDefault').ruleSet
 };

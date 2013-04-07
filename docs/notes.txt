@@ -1,3 +1,14 @@
+UP NEXT
+  refactor board/position handling
+    while the whole 'godel number' idea is neat, it seems unnecessarily shitty
+    just do something more standard
+  make rule set reporting easier
+    once the above is done, a rule set can be represented as a rule-per-piece-per-position
+    then it can be more easily handled in the ui and api
+    and plus, the client can handle the whole thing
+      so server doesnt have to communicate rule changes on every move
+
+
 sockets
 
   how does player leaving need to work at heroku with long polling?

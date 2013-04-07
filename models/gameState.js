@@ -12,6 +12,8 @@ var MoveSchema = new mongoose.Schema({
 });
 
 var Schema = new mongoose.Schema({
+  // This whole godel number thing sounded pure and fun in theory but kind of sucks in practice
+  // FIXME: Refactor to a more 'normal' model
   state:        { type: String, default: '89abca9877777777000000000000000000000000000000001111111123456432' },
   turn:         { type: Number, default: 0 },
   previousMove: [MoveSchema],

@@ -74,4 +74,18 @@ Position.prototype.continuous = function(piece, direction) {
   return positions;
 };
 
+Position.prototype.wrap = function(position) {
+  return new Position(Position.wrap(this.row), Position.wrap(this.col));
+};
+
+Position.wrap = function(num) {
+  if(num < 1) {
+    return Position.wrap(num + 8);
+  } else if(num > 8) {
+    return num % 8;
+  } else {
+    return num;
+  }
+};
+
 module.exports = Position;

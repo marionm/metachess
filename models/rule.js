@@ -33,12 +33,25 @@ var Rule = function(id, pieceType, functions) {
   }
   this.applicators = applicators;
 
-  this.enabledForState = functions.enabledForState || function() {
+  //function(state) -> boolean
+  this.enabledForState = functions.enabler || function() {
     return true;
   };
 };
 
 Rule.defaultApplicator = defaultApplicator;
+
+Rule.noBoardCheckTargeter = function(state, piece, positions) {
+  var moves = [];
+  var pos = piece.position;
+  _.each(positions, function(position) {
+    var otherPiece = state.pieceAt(position);
+    if(!otherPiece || piece.enemy(otherPiece)) {
+      moves.push(position);
+    }
+  });
+  return moves;
+};
 
 Rule.prototype.apply = function(state, piece, to, extraInfo) {
   var turn = state.turn;

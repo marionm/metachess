@@ -38,7 +38,7 @@ RuleSet.prototype.apply = function(state, from, to, extraInfo) {
   var piece = state.pieceAt(from);
 
   var matchingRules = _.filter(this.rules, function(rule) {
-    return rule.matches(state, piece, to);
+    return rule.isEnabled(state) && rule.matches(state, piece, to);
   });
 
   if(matchingRules.length < 1) {

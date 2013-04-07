@@ -129,7 +129,7 @@ rules.push(new Rule(rules.length, 'rook', {
 
 //Standard knight movement
 
-var knightTargeter = function(state, piece) {
+var knightTargeterNoBoardCheck = function(state, piece) {
   var moves = [];
 
   var pos = piece.position;
@@ -146,12 +146,18 @@ var knightTargeter = function(state, piece) {
 
   _.each(positions, function(position) {
     var otherPiece = state.pieceAt(position);
-    if(position.onBoard() && (!otherPiece || piece.enemy(otherPiece))) {
+    if(!otherPiece || piece.enemy(otherPiece)) {
       moves.push(position);
     }
   });
 
   return moves;
+};
+
+var knightTargeter = function(state, piece) {
+  return _.filter(knightTargeterNoBoardCheck(state, piece), function(position) {
+    return position.onBoard();
+  });
 };
 
 rules.push(new Rule(rules.length, 'knight', {
@@ -308,7 +314,8 @@ module.exports = {
     targeter: rookTargeter
   },
   knight: {
-    targeter: knightTargeter
+    targeter:             knightTargeter,
+    noBoardCheckTargeter: knightTargeterNoBoardCheck
   },
   bishop: {
     targeter: bishopTargeter
