@@ -10,10 +10,21 @@ var Piece = Backbone.Model.extend({
     return '<div id="' + id + '" class="' + css + '" data-piece-id="' + this.cid + '"></div>';
   },
 
-  setValidCellClass: function(currentCell, cssClass) {
+  isSelected: function() {
+    return Piece.selected == this;
+  },
+
+  select: function() {
+    Piece.deselectAll();
+    Piece.selected = this;
+    this.getCell().addClass('original');
+    this.setValidCellClass('valid-mouseover');
+  },
+
+  setValidCellClass: function(cssClass) {
     var validMoveMap = window.game.currentState().get('validMoves');
     if(validMoveMap) {
-      var validMoves = validMoveMap[currentCell.data('index')] || [];
+      var validMoves = validMoveMap[this.getCell().data('index')] || [];
       _.each(validMoves, function(position) {
         $('#cell' + position).addClass(cssClass);
       });
@@ -34,11 +45,21 @@ var Piece = Backbone.Model.extend({
     var pieceDom = $(cell.children()[0]);
     var piece = this;
 
+    pieceDom.click(function() {
+      if(piece.isSelected()) {
+        Piece.deselectAll();
+      } else {
+        piece.select();
+      }
+    });
+
     pieceDom.mouseover(function() {
-      piece.setValidCellClass(cell, 'valid-mouseover');
+      if(Piece.selected) return;
+      piece.setValidCellClass('valid-mouseover');
     });
 
     pieceDom.mouseout(function() {
+      if(Piece.selected) return;
       $('.cell').removeClass('valid-mouseover');
     });
 
@@ -47,9 +68,10 @@ var Piece = Backbone.Model.extend({
       containment: '.board',
       helper:      'clone',
       start: function() {
+        Piece.deselectAll();
         pieceDom.hide();
         cell.addClass('original');
-        piece.setValidCellClass(cell, 'valid-drag');
+        piece.setValidCellClass('valid-drag');
       },
       stop: function() {
         pieceDom.show();
@@ -65,6 +87,11 @@ var Piece = Backbone.Model.extend({
   }
 
 },{
+  deselectAll: function() {
+    Piece.selected = null;
+    $('.cell').removeClass('original').removeClass('valid-mouseover');
+  },
+
   fromState: function(state, index) {
     var code = parseInt(state[index], 16);
     if(code == 0) return null;

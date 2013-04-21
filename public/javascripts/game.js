@@ -1,8 +1,16 @@
 //TODO: Modularize code
+//TODO: Cells should be models
 
-//TODO: Cells should be models, too? This is getting messy
 var prepareBoard = function() {
-  $('.board .cell').droppable({
+  cells = $('.board .cell');
+
+  cells.click(function() {
+    if(Piece.selected && $(this).hasClass('valid-mouseover')) {
+      window.game.move(Piece.selected, $(this).data('index'));
+    }
+  });
+
+  cells.droppable({
     hoverClass: 'piece-hover',
     drop: function(event, ui) {
       var cells = $('.board .cell');

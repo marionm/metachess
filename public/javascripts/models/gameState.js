@@ -39,7 +39,7 @@ var GameState = Backbone.Model.extend({
         cell.children().remove();
       }
 
-      cell.removeClass('valid-mouseover');
+      Piece.deselectAll();
 
       cell.removeClass('previous-move');
       if(_.include(previousMoveIndexes, cell.data('index'))) {
