@@ -13,6 +13,8 @@ table.board {
       background-color: darkKhaki; }
     table.board .cell.original {
       background-color: darkgoldenrod; }
+    table.board .cell.previous-move {
+      background-color: lightBlue; }
     table.board .cell.piece-hover {
       background-color: lightGrey; }
     table.board .cell.valid-drag, table.board .cell.valid-mouseover {

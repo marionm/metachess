@@ -17,9 +17,15 @@ var GameState = Backbone.Model.extend({
     return this.get('pieces')[id];
   },
 
-  render: function() {
+  render: function(previousMove) {
     var pieces = this.get('pieces');
 
+    var previousMoveIndexes = [];
+    var previousMove = this.get('previousMove');
+    if(previousMove) {
+      previousMoveIndexes.push(previousMove[0].from);
+      previousMoveIndexes.push(previousMove[0].to);
+    }
     _.each(pieces, function(piece) {
       piece.render();
     });
@@ -32,7 +38,13 @@ var GameState = Backbone.Model.extend({
       if(!hasPiece) {
         cell.children().remove();
       }
+
+      cell.removeClass('previous-move');
+      if(_.include(previousMoveIndexes, cell.data('index'))) {
+        cell.addClass('previous-move');
+      }
     });
+
   }
 
 });
