@@ -47,6 +47,9 @@ var GameState = Backbone.Model.extend({
       }
     });
 
+    if(_.size(this.get('validMoves')) == 0) {
+      $('#checkmate-alert').show();
+    }
   }
 
 });

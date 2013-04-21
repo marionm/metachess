@@ -117,7 +117,9 @@ Schema.methods.validMoves = function(ruleSet, color, allowCheckStates, withoutRu
         return move;
       });
 
-      moves[piece.position.index] = validMoves;
+      if(validMoves.length > 0) {
+        moves[piece.position.index] = validMoves;
+      }
     }
   });
 

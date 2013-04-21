@@ -1,4 +1,5 @@
 h2 Game ##{game.number}
+  span#checkmate-alert.alert.checkmate(style = 'display: none') &nbsp;- Checkmate
 
 !=partial('games/_board')
 !=partial('games/_promotionDialog');

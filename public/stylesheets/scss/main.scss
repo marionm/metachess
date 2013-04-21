@@ -11,3 +11,11 @@ dl {
     margin-left: 100px;
   }
 }
+
+span {
+  &.alert {
+    &.checkmate {
+      color: darkRed;
+    }
+  }
+}
