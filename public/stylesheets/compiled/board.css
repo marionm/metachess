@@ -7,6 +7,10 @@ table.board {
   table.board .cell {
     height: 64px;
     width: 64px; }
+    table.board .cell.light {
+      background-color: khaki; }
+    table.board .cell.dark {
+      background-color: darkKhaki; }
     table.board .cell.original {
       background-color: darkgoldenrod; }
     table.board .cell.piece-hover {

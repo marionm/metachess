@@ -1,8 +1,16 @@
+- var swapCellClass = function(cellClass) {
+-   return cellClass == 'light' ? 'dark' : 'light';
+- }
+
+-var cellClass = 'light';
+
 table.board
   - for(i = 0; i < 8; i++) {
+    - cellClass = swapCellClass(cellClass);
     tr
       - for(j = 0; j < 8; j++) {
           - var cellIndex = i * 8 + j;
-          td.cell(id = 'cell' + cellIndex, data-index = cellIndex)
+          - cellClass = swapCellClass(cellClass);
+          td.cell(id = 'cell' + cellIndex, class = cellClass, data-index = cellIndex)
       - }
   - }

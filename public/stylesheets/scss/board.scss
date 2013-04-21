@@ -15,6 +15,14 @@ table.board {
   .cell {
     @include cell-size;
 
+    &.light {
+      background-color: khaki;
+    }
+
+    &.dark {
+      background-color: darkKhaki;
+    }
+
     &.original {
       background-color: darkgoldenrod;
     }
