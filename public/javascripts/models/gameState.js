@@ -22,7 +22,7 @@ var GameState = Backbone.Model.extend({
 
     var previousMoveIndexes = [];
     var previousMove = this.get('previousMove');
-    if(previousMove) {
+    if(previousMove && previousMove.length > 0) {
       previousMoveIndexes.push(previousMove[0].from);
       previousMoveIndexes.push(previousMove[0].to);
     }
