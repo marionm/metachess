@@ -46,7 +46,10 @@ var Piece = Backbone.Model.extend({
     var piece = this;
 
     pieceDom.click(function() {
-      if(piece.isSelected()) {
+      // TODO: Total hack
+      if(Piece.selected && cell.hasClass('valid-mouseover')) {
+        cell.click();
+      } else if(piece.isSelected()) {
         Piece.deselectAll();
       } else {
         piece.select();
