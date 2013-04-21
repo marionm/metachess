@@ -6,8 +6,9 @@ var defaultApplicator = function(state, piece, to, extraInfo) {
   return state.movePiece(piece, to);
 };
 
-var Rule = function(id, pieceType, functions) {
+var Rule = function(id, description, pieceType, functions) {
   this.id = id;
+  this.description = description;
   this.pieceType = pieceType;
 
   functions = functions || {};

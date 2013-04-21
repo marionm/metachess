@@ -57,7 +57,7 @@ var standardPawnMovementEnabler = function(state) {
   return !reversePawnMovementEnabler(state);
 };
 
-rules.push(new Rule(rules.length, 'pawn', {
+rules.push(new Rule(rules.length, 'Standard pawn movement and promotion', 'pawn', {
   enabler: standardPawnMovementEnabler,
   targeter: standard.pawn.targeter,
   applicators: [
@@ -94,20 +94,20 @@ var reversePawnTargeter = function(state, piece) {
   return moves;
 };
 
-rules.push(new Rule(rules.length, 'pawn', {
+rules.push(new Rule(rules.length, 'Pawns move and attack backwards', 'pawn', {
   enabler:  reversePawnMovementEnabler,
   targeter: reversePawnTargeter
 }));
 
 // First-turn pawn movement
 
-rules.push(new Rule(rules.length, 'pawn', {
+rules.push(new Rule(rules.length, 'First pawn move can be two spaces', 'pawn', {
   targeter: standard.pawn.firstMoveTargeter
 }));
 
 // En passant
 
-rules.push(new Rule(rules.length, 'pawn', {
+rules.push(new Rule(rules.length, 'En Passant', 'pawn', {
   targeter: standard.pawn.enPassantTargeter,
   applicators: [
     Rule.defaultApplicator,
@@ -123,7 +123,7 @@ var standardRookMovementEnabler = function(state) {
   return !rookBishopMovementSwapEnabler(state);
 };
 
-rules.push(new Rule(rules.length, 'rook', {
+rules.push(new Rule(rules.length, 'Standard rook movement', 'rook', {
   enabler:  standardRookMovementEnabler,
   targeter: standard.rook.targeter
 }));
@@ -134,7 +134,7 @@ var standardBishopMovementEnabler = function(state) {
   return !rookBishopMovementSwapEnabler(state);
 };
 
-rules.push(new Rule(rules.length, 'bishop', {
+rules.push(new Rule(rules.length, 'Standard bishop movement', 'bishop', {
   enabler:  standardBishopMovementEnabler,
   targeter: standard.bishop.targeter
 }));
@@ -152,12 +152,12 @@ var rookBishopMovementSwapEnabler = function(state) {
   return pieceAt(state, positions, positions, 'king');
 };
 
-rules.push(new Rule(rules.length, 'rook', {
+rules.push(new Rule(rules.length, 'Rooks move like bishops', 'rook', {
   enabler:  rookBishopMovementSwapEnabler,
   targeter: standard.bishop.targeter
 }));
 
-rules.push(new Rule(rules.length, 'bishop', {
+rules.push(new Rule(rules.length, 'Bishops move like rooks', 'bishop', {
   enabler:  rookBishopMovementSwapEnabler,
   targeter: standard.rook.targeter
 }));
@@ -170,7 +170,7 @@ var standardKnightEnabler = function(state) {
   return !superKnightEnabler22(state) && !superKnightEnabler31(state)
 };
 
-rules.push(new Rule(rules.length, 'knight', {
+rules.push(new Rule(rules.length, 'Standard knight movement', 'knight', {
   enabler:  standardKnightEnabler,
   targeter: standard.knight.targeter
 }));
@@ -200,7 +200,7 @@ var superKnightTargeter22 = function(state, piece) {
   });
 };
 
-rules.push(new Rule(rules.length, 'knight', {
+rules.push(new Rule(rules.length, 'Knights move in a 2-by-2 shape', 'knight', {
   enabler:  superKnightEnabler22,
   targeter: superKnightTargeter22
 }));
@@ -234,7 +234,7 @@ var superKnightTargeter31 = function(state, piece) {
   });
 };
 
-rules.push(new Rule(rules.length, 'knight', {
+rules.push(new Rule(rules.length, 'Knights move in a 3-by-1 shape', 'knight', {
   enabler:  superKnightEnabler31,
   targeter: superKnightTargeter31
 }));
@@ -271,7 +271,7 @@ var wrappingKnightTargeter = function(state, piece) {
   });
 };
 
-rules.push(new Rule(rules.length, 'knight', {
+rules.push(new Rule(rules.length, 'Knights wrap around the board', 'knight', {
   enabler:  wrappingKnightEnabler,
   targeter: wrappingKnightTargeter
 }));
@@ -284,7 +284,7 @@ var standardQueenMovementEnabler = function(state) {
   return !gimppedQueenMovementEnabler(state);
 };
 
-rules.push(new Rule(rules.length, 'queen', {
+rules.push(new Rule(rules.length, 'Standard queen movement', 'queen', {
   enabler:  standardQueenMovementEnabler,
   targeter: standard.queen.targeter
 }));
@@ -302,7 +302,7 @@ var gimppedQueenMovementEnabler = function(state) {
   return pieceAt(state, sideColumns, sideColumns, 'knight');
 };
 
-rules.push(new Rule(rules.length, 'queen', {
+rules.push(new Rule(rules.length, 'Queens move like kings', 'queen', {
   enabler:  gimppedQueenMovementEnabler,
   targeter: standard.king.targeter
 }));
@@ -311,11 +311,11 @@ rules.push(new Rule(rules.length, 'queen', {
 
 //Standard king movement
 
-rules.push(new Rule(rules.length, 'king', {
+rules.push(new Rule(rules.length, 'Standard king movement', 'king', {
   targeter: standard.king.targeter
 }));
 
-rules.push(new Rule(rules.length, 'king', {
+rules.push(new Rule(rules.length, 'Castling', 'king', {
   targeter: standard.king.castlingTargeter,
   applicators: [
     Rule.defaultApplicator,

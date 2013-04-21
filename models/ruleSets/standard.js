@@ -46,7 +46,7 @@ var pawnPromotionApplicator = function(state, piece, to, extraInfo) {
   return state;
 };
 
-rules.push(new Rule(rules.length, 'pawn', {
+rules.push(new Rule(rules.length, 'Standard pawn movement and promotion', 'pawn', {
   targeter:    pawnTargeter,
   applicators: [
     Rule.defaultApplicator,
@@ -69,7 +69,7 @@ var pawnFirstMoveTargeter = function(state, piece) {
   }
 };
 
-rules.push(new Rule(rules.length, 'pawn', {
+rules.push(new Rule(rules.length, 'First pawn move can be two spaces', 'pawn', {
   targeter: pawnFirstMoveTargeter
 }));
 
@@ -104,7 +104,7 @@ var enPassantCaptureApplicator = function(state, piece, to) {
   return state;
 };
 
-rules.push(new Rule(rules.length, 'pawn', {
+rules.push(new Rule(rules.length, 'En Passant', 'pawn', {
   targeter: enPassantTargeter,
   applicators: [
     Rule.defaultApplicator,
@@ -121,7 +121,7 @@ var rookTargeter = function(state, piece) {
   return Rule.validDirectionalMoves(state, piece, directions, true);
 };
 
-rules.push(new Rule(rules.length, 'rook', {
+rules.push(new Rule(rules.length, 'Standard rook movement', 'rook', {
   targeter: rookTargeter
 }));
 
@@ -160,7 +160,7 @@ var knightTargeter = function(state, piece) {
   });
 };
 
-rules.push(new Rule(rules.length, 'knight', {
+rules.push(new Rule(rules.length, 'Standard knight movement', 'knight', {
   targeter: knightTargeter
 }));
 
@@ -173,7 +173,7 @@ var bishopTargeter = function(state, piece) {
   return Rule.validDirectionalMoves(state, piece, directions, true);
 };
 
-rules.push(new Rule(rules.length, 'bishop', {
+rules.push(new Rule(rules.length, 'Standard bishop movement', 'bishop', {
   targeter: bishopTargeter
 }));
 
@@ -186,7 +186,7 @@ var queenTargeter = function(state, piece) {
   return Rule.validDirectionalMoves(state, piece, directions, true);
 };
 
-rules.push(new Rule(rules.length, 'queen', {
+rules.push(new Rule(rules.length, 'Standard queen movement', 'queen', {
   targeter: queenTargeter
 }));
 
@@ -199,7 +199,7 @@ var kingTargeter = function(state, piece) {
   return Rule.validDirectionalMoves(state, piece, directions, false);
 };
 
-rules.push(new Rule(rules.length, 'king', {
+rules.push(new Rule(rules.length, 'Standard king movement', 'king', {
   targeter: kingTargeter
 }));
 
@@ -291,7 +291,7 @@ var castlingApplicator = function(state, piece, to) {
   return state;
 };
 
-rules.push(new Rule(rules.length, 'king', {
+rules.push(new Rule(rules.length, 'Castling', 'king', {
   targeter: castlingTargeter,
   applicators: [
     Rule.defaultApplicator,
