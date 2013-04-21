@@ -76,34 +76,48 @@ Schema.methods.inCheck = function(color, ruleSet) {
   var king = this.findKing(color);
 
   var enemyColor = color == 'white' ? 'black' : 'white';
-  var enemyMoves = this.validMoves(ruleSet, enemyColor, true);
+  var enemyMoves = this.validMoves(ruleSet, enemyColor, true, true);
 
   return _.any(enemyMoves, function(moves) {
     return _.any(moves, function(move) {
-      return move == king.position.index;
+      return move.index == king.position.index;
     });
   });
 };
 
-Schema.methods.validMoves = function(ruleSet, color, allowCheckStates) {
+Schema.methods.validMoves = function(ruleSet, color, allowCheckStates, withoutRuleChanges) {
   //Used later in inCheck method
   //TODO: Ugh, really?
   this.ruleSet = ruleSet;
 
   var moves = {};
 
-  var that = this;
+  var state = this;
   var turnColor = color || this.turnColor();
 
   _.each(this.pieces(), function(piece) {
     if(piece.color == turnColor) {
-      var positions = ruleSet.validMoves(that, piece, allowCheckStates);
+      var validMoves = ruleSet.validMoves(state, piece, allowCheckStates, withoutRuleChanges);
 
-      var indexes = _.map(positions, function(position) {
-        return position.index;
+      validMoves = _.map(validMoves, function(validMove) {
+        var move = {
+          index: validMove.target.index
+        };
+
+        if(!withoutRuleChanges) {
+          var getRuleDescription = function(rule) {
+            return rule.description;
+          };
+          move.ruleChanges = {
+            added:   _.map(validMove.ruleChanges.added,   getRuleDescription),
+            removed: _.map(validMove.ruleChanges.removed, getRuleDescription)
+          };
+        }
+
+        return move;
       });
 
-      moves[piece.position.index] = indexes;
+      moves[piece.position.index] = validMoves;
     }
   });
 

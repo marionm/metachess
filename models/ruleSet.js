@@ -14,24 +14,71 @@ var setPieceMoved = function(oldState, newState, pieceType, color, side) {
   if(newState.state[index] != oldState.state[index]) {
     newState.setPieceMoved(pieceType, color, side);
   }
-}
+};
 
-RuleSet.prototype.validMoves = function(state, piece, allowCheckStates) {
-  return _.reduce(this.rules, function(moves, rule) {
+RuleSet.prototype.validMoves = function(state, piece, allowCheckStates, withoutRuleChanges) {
+  var ruleSet = this;
+  var currentRules = ruleSet.enabledRules(state);
+
+  return _.reduce(this.rules, function(validMoves, rule) {
     if(rule.isEnabled(state) && rule.pieceType == piece.type) {
+      var moves = [];
       var targets = rule.targets(state, piece, allowCheckStates);
+      _.each(targets, function(target) {
+        moves.push({ target: target });
+      });
 
-      if(!allowCheckStates) {
-        targets = _.reject(targets, function(target) {
-          var resultingState = rule.apply(state.clone(), piece, target);
-          return resultingState.inCheck(piece.color);
+      if(!allowCheckStates || !withoutRuleChanges) {
+        var statesByTarget = {}
+        _.each(moves, function(move) {
+          statesByTarget[move.target.index] = rule.apply(state.clone(), piece, move.target);
         });
+
+        if(!allowCheckStates) {
+          moves = _.reject(moves, function(move) {
+            var inCheck = statesByTarget[move.target.index].inCheck(piece.color);
+            return inCheck;
+          });
+        }
+
+        if(!withoutRuleChanges) {
+          moves = _.map(moves, function(move) {
+            var targetState = statesByTarget[move.target.index];
+            var targetRules = ruleSet.enabledRules(targetState);
+            return {
+              target:      move.target,
+              ruleChanges: ruleSet.ruleChanges(currentRules, targetRules)
+            };
+          });
+        }
       }
 
-      moves.push.apply(moves, targets);
+      validMoves.push.apply(validMoves, moves);
     }
-    return moves;
+    return validMoves;
   }, []);
+};
+
+RuleSet.prototype.enabledRules = function(state) {
+  return _.filter(this.rules, function(rule) {
+    return rule.isEnabled(state);
+  });
+};
+
+RuleSet.prototype.ruleChanges = function(baseRules, targetRules) {
+  var getNewRules = function(baseRules, targetRules) {
+    baseIds = _.map(baseRules, function(rule) {
+      return rule.id;
+    });
+    return _.filter(targetRules, function(targetRule) {
+      return !_.include(baseIds, targetRule.id);
+    });
+  };
+
+  return {
+    added:   getNewRules(baseRules, targetRules),
+    removed: getNewRules(targetRules, baseRules)
+  }
 };
 
 RuleSet.prototype.apply = function(state, from, to, extraInfo) {

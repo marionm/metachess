@@ -25,8 +25,8 @@ var Piece = Backbone.Model.extend({
     var validMoveMap = window.game.currentState().get('validMoves');
     if(validMoveMap) {
       var validMoves = validMoveMap[this.getCell().data('index')] || [];
-      _.each(validMoves, function(position) {
-        $('#cell' + position).addClass(cssClass);
+      _.each(validMoves, function(validMove) {
+        $('#cell' + validMove.index).addClass(cssClass);
       });
     }
   },
