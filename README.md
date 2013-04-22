@@ -1,20 +1,29 @@
-## Metachess
+# Metachess
 
 Experimental node.js implementation of metachess, inspired by GEB.
 
-### Prerequisites
+### Rules
 
-1. node.js
-1. npm
-1. Mongo
+The game starts with the standard set of chess rules. The rules change based on the board's state:
 
-### Setup
+* Knight on the first or second file = Queens move like kings
+* Bishop on its opponent's back rank = Knights can move in a 2-by-2 L shape, but not the standard shape
+* Rook on its opponent's back rank = Knights can move in a 3-by-1 L shape, but not the standard shape
+* Queen on its opponent's back rank = Pawns move and attack backwards
+  * Pawns cannot be promoted on their own back rank
+  * Pawns can _always_ move two spaces forward from their starting rank
+* King in one of the four center-most positions = Bishop and rook movement rules are swapped
+* King in one of the board's corners = Knights can wrap around the board
 
-1. Clone repo and cd into it
+### Local setup
+
+1. Install node.js, npm, and MongoDB
+1. Clone the repo and `cd` into it
 1. `npm install`
 1. `node metachess.js`
+1. Hit localhost:3000 in your browser
 
-### Adding new rules
+### Adding and using a new rule set
 
 Create a new file under `models/ruleSets`, create an array of `Rule` objects, and export a `RuleSet`. Then, load and export the new `RuleSet` in `models/ruleSets.js`, and switch to it in `controllers/api/games.js`.
 
