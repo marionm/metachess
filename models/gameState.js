@@ -105,12 +105,10 @@ Schema.methods.validMoves = function(ruleSet, color, allowCheckStates, withoutRu
         };
 
         if(!withoutRuleChanges) {
-          var getRuleDescription = function(rule) {
-            return rule.description;
-          };
+          var toJSON = function(rule) { return rule.toJSON(); };
           move.ruleChanges = {
-            added:   _.map(validMove.ruleChanges.added,   getRuleDescription),
-            removed: _.map(validMove.ruleChanges.removed, getRuleDescription)
+            added:   _.map(validMove.ruleChanges.added,   toJSON),
+            removed: _.map(validMove.ruleChanges.removed, toJSON)
           };
         }
 

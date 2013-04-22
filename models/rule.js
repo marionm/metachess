@@ -77,6 +77,13 @@ Rule.prototype.isEnabled = function(state) {
   return this.enabledForState(state);
 }
 
+Rule.prototype.toJSON = function() {
+  return {
+    id: this.id,
+    description: this.description
+  };
+};
+
 Rule.validDirectionalMoves = function(state, piece, directions, continuous) {
   continuous = !!continuous;
 
