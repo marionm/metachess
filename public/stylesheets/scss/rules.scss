@@ -1,0 +1,35 @@
+@import 'mixins';
+
+$full-board: $cell-width * 8;
+$half-board: $full-board / 2;
+
+div#rules {
+
+  width: $cell-width * 8;
+  overflow: auto;
+
+  .current {
+    float: left;
+    width: $half-board;
+  }
+
+  .changes {
+    width: $half-board;
+    margin-left: $half-board;
+
+    .list ul {
+      list-style-type: none;
+      padding: 0;
+    }
+  }
+
+  .rule {
+    &.added {
+      color: darkGreen
+    }
+    &.removed {
+      color: darkRed
+    }
+  }
+
+}

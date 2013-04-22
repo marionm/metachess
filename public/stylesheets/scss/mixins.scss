@@ -1,0 +1,6 @@
+$cell-width: 64px;
+
+@mixin cell-size {
+  height: $cell-width;
+  width: $cell-width;
+}

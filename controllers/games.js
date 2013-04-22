@@ -4,7 +4,7 @@ var GameCounter = require('../models/gameCounter');
 
 var show = function(req, res, game) {
   res.render('games/show', {
-    stylesheets: ['compiled/board'],
+    stylesheets: ['compiled/board', 'compiled/rules'],
     scripts:     ['socket.io', 'game'],
     game:        game
   });

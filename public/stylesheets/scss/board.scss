@@ -1,7 +1,4 @@
-@mixin cell-size {
-  height: 64px;
-  width: 64px;
-}
+@import 'mixins';
 
 table.board {
   border-collapse: collapse;
@@ -14,6 +11,8 @@ table.board {
 
   .cell {
     @include cell-size;
+
+    position: relative;
 
     &.light {
       background-color: khaki;
@@ -38,6 +37,12 @@ table.board {
     &.valid-drag, &.valid-mouseover {
       background-color: darkGrey;
     };
+
+    .annotation {
+      position: absolute;
+      top: 2px;
+      right: 2px;
+    }
   }
 
   .piece {

@@ -47,16 +47,95 @@ var GameState = Backbone.Model.extend({
       }
     });
 
-    // TODO: Move rules to a separate model
+    if(_.size(this.get('validMoves')) == 0) {
+      $('#checkmate-alert').show();
+    }
+
+    this.renderCurrentRules();
+  },
+
+  // TODO: Move rules to a separate model
+
+  renderCurrentRules: function() {
     var currentRuleList = $($('#rules .current .list')[0]);
     currentRuleList.empty();
     _.each((this.get('enabledRules') || []), function(rule) {
       currentRuleList.append($('<li/>').text(rule.description).data('id', rule.id));
     });
+  },
 
-    if(_.size(this.get('validMoves')) == 0) {
-      $('#checkmate-alert').show();
-    }
+  annotateRuleChanges: function(position) {
+    this.removeRuleChangeAnnotations();
+
+    var changeLists = $($('#rules .changes .list')[0]);
+
+    var validMoves = this.get('validMoves');
+    if(!validMoves) return;
+
+    var label = 0;
+    var annotations = [];
+
+    _.each((validMoves[position] || []), function(validMove) {
+      var ruleChanges = validMove.ruleChanges;
+      var addedRules = ruleChanges.added;
+      var removedRules = ruleChanges.removed;
+      if(addedRules.length == 0 && removedRules.length == 0) return;
+
+      var additions = [];
+      _.each(addedRules, function(rule) {
+        additions.push(rule.description);
+      });
+      var removals = [];
+      _.each(removedRules, function(rule) {
+        removals.push(rule.description);
+      });
+
+      var compare = function(a, b) {
+        if(a.length != b.length) return false;
+        for(var i = 0; i < a.length; i++) {
+          if(a[i] != b[i]) return false;
+        }
+        return true;
+      };
+      var annotation = _.find(annotations, function(annotation) {
+        return compare(annotation.additions, additions) && compare(annotation.removals, removals);
+      });
+
+      if(annotation) {
+        annotation.indexes.push(validMove.index);
+      } else {
+        label = label + 1;
+        annotations.push({
+          indexes: [validMove.index],
+          label: label,
+          additions: additions,
+          removals: removals
+        });
+      }
+    });
+
+    _.each(annotations, function(annotation) {
+      _.each(annotation.indexes, function(index) {
+        var cell = $('#cell' + index);
+        cell.append($('<div/>').addClass('annotation').text(annotation.label));
+      });
+
+      var changeList = $('<ul/>');
+      _.each(annotation.additions, function(addition) {
+        changeList.append($('<li/>').addClass('added rule').text('+ ' + addition));
+      });
+      _.each(annotation.removals, function(removal) {
+        changeList.append($('<li/>').addClass('removed rule').text('- ' + removal));
+      });
+
+      changeLists.append($('<li/>').text(label).append(changeList));
+    });
+  },
+
+  removeRuleChangeAnnotations: function() {
+    var changeLists = $($('#rules .changes .list')[0]);
+    changeLists.empty();
+    $('.cell .annotation').remove();
   }
 
 });

@@ -19,6 +19,7 @@ var Piece = Backbone.Model.extend({
     Piece.selected = this;
     this.getCell().addClass('original');
     this.setValidCellClass('valid-mouseover');
+    this.annotateRuleChanges();
   },
 
   setValidCellClass: function(cssClass) {
@@ -29,6 +30,11 @@ var Piece = Backbone.Model.extend({
         $('#cell' + validMove.index).addClass(cssClass);
       });
     }
+  },
+
+  annotateRuleChanges: function() {
+    var index = this.getCell().data('index');
+    window.game.currentState().annotateRuleChanges(index);
   },
 
   render: function() {
@@ -59,11 +65,13 @@ var Piece = Backbone.Model.extend({
     pieceDom.mouseover(function() {
       if(Piece.selected) return;
       piece.setValidCellClass('valid-mouseover');
+      piece.annotateRuleChanges();
     });
 
     pieceDom.mouseout(function() {
       if(Piece.selected) return;
       $('.cell').removeClass('valid-mouseover');
+      window.game.currentState().removeRuleChangeAnnotations();
     });
 
     pieceDom.draggable({
@@ -93,6 +101,7 @@ var Piece = Backbone.Model.extend({
   deselectAll: function() {
     Piece.selected = null;
     $('.cell').removeClass('original').removeClass('valid-mouseover');
+    window.game.currentState().removeRuleChangeAnnotations();
   },
 
   fromState: function(state, index) {

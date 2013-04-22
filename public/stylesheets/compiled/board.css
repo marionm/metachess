@@ -6,7 +6,8 @@ table.board {
     border: solid 1px black; }
   table.board .cell {
     height: 64px;
-    width: 64px; }
+    width: 64px;
+    position: relative; }
     table.board .cell.light {
       background-color: khaki; }
     table.board .cell.dark {
@@ -19,6 +20,10 @@ table.board {
       background-color: lightGrey; }
     table.board .cell.valid-drag, table.board .cell.valid-mouseover {
       background-color: darkGrey; }
+    table.board .cell .annotation {
+      position: absolute;
+      top: 2px;
+      right: 2px; }
   table.board .piece {
     height: 64px;
     width: 64px;

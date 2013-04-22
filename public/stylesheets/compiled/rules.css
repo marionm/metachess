@@ -1,0 +1,16 @@
+div#rules {
+  width: 512px;
+  overflow: auto; }
+  div#rules .current {
+    float: left;
+    width: 256px; }
+  div#rules .changes {
+    width: 256px;
+    margin-left: 256px; }
+    div#rules .changes .list ul {
+      list-style-type: none;
+      padding: 0; }
+  div#rules .rule.added {
+    color: darkgreen; }
+  div#rules .rule.removed {
+    color: darkred; }
