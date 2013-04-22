@@ -10,11 +10,17 @@ exports.show = function(req, res) {
   Game.findById(req.params.gameId, function(err, game) {
     //var ruleSet = RuleSets.standard;
     var ruleSet = RuleSets.metachessDefault;
-    var validMoves = game.currentState().validMoves(ruleSet);
+    var state = game.currentState();
+
+    var validMoves = state.validMoves(ruleSet);
+    var enabledRules = ruleSet.enabledRules(state);
 
     var json = game.toJSON();
     var currentState = _.last(json.states);
     currentState.validMoves = validMoves;
+    currentState.enabledRules = _.map(enabledRules, function(rule) {
+      return rule.toJSON();
+    });
 
     res.send(json);
   });
@@ -47,6 +53,9 @@ exports.move = function(data, callback) {
     //TODO: Push this into the model
     var newStateJson = newState.toJSON();
     newStateJson.validMoves = newState.validMoves(ruleSet);
+    newStateJson.enabledRules = _.map(ruleSet.enabledRules(newState), function(rule) {
+      return rule.toJSON();
+    });
 
     var response = {
       gameState: newStateJson,
