@@ -1,3 +1,6 @@
+.ui-draggable-dragging {
+  z-index: 1; }
+
 table.board {
   border-collapse: collapse; }
   table.board td {
