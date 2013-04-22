@@ -5,7 +5,7 @@ var prepareBoard = function() {
   cells = $('.board .cell');
 
   cells.click(function() {
-    if(Piece.selected && $(this).hasClass('valid-mouseover')) {
+    if(Piece.selected && $(this).hasClass('valid-move')) {
       window.game.move(Piece.selected, $(this).data('index'));
     }
   });

@@ -18,7 +18,7 @@ var Piece = Backbone.Model.extend({
     Piece.deselectAll();
     Piece.selected = this;
     this.getCell().addClass('original');
-    this.setValidCellClass('valid-mouseover');
+    this.setValidCellClass('valid-move');
     this.annotateRuleChanges();
   },
 
@@ -53,7 +53,7 @@ var Piece = Backbone.Model.extend({
 
     pieceDom.click(function() {
       // TODO: Total hack
-      if(Piece.selected && cell.hasClass('valid-mouseover')) {
+      if(Piece.selected && cell.hasClass('valid-move')) {
         cell.click();
       } else if(piece.isSelected()) {
         Piece.deselectAll();
@@ -64,13 +64,13 @@ var Piece = Backbone.Model.extend({
 
     pieceDom.mouseover(function() {
       if(Piece.selected) return;
-      piece.setValidCellClass('valid-mouseover');
+      piece.setValidCellClass('valid-move');
       piece.annotateRuleChanges();
     });
 
     pieceDom.mouseout(function() {
       if(Piece.selected) return;
-      $('.cell').removeClass('valid-mouseover');
+      $('.cell').removeClass('valid-move');
       window.game.currentState().removeRuleChangeAnnotations();
     });
 
@@ -100,7 +100,7 @@ var Piece = Backbone.Model.extend({
 },{
   deselectAll: function() {
     Piece.selected = null;
-    $('.cell').removeClass('original').removeClass('valid-mouseover');
+    $('.cell').removeClass('original').removeClass('valid-move');
     window.game.currentState().removeRuleChangeAnnotations();
   },
 

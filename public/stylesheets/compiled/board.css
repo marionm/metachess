@@ -18,7 +18,7 @@ table.board {
       background-color: lightBlue; }
     table.board .cell.piece-hover {
       background-color: lightGrey; }
-    table.board .cell.valid-drag, table.board .cell.valid-mouseover {
+    table.board .cell.valid-drag, table.board .cell.valid-move {
       background-color: darkGrey; }
     table.board .cell .annotation {
       position: absolute;
