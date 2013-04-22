@@ -47,6 +47,13 @@ var GameState = Backbone.Model.extend({
       }
     });
 
+    // TODO: Move rules to a separate model
+    var currentRuleList = $($('#rules .current .list')[0]);
+    currentRuleList.empty();
+    _.each((this.get('enabledRules') || []), function(rule) {
+      currentRuleList.append($('<li/>').text(rule.description).data('id', rule.id));
+    });
+
     if(_.size(this.get('validMoves')) == 0) {
       $('#checkmate-alert').show();
     }
