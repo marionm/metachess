@@ -266,8 +266,12 @@ var getKnightNoBoardCheckTargeter = function(state) {
 var wrappingKnightTargeter = function(state, piece) {
   var targeter = getKnightNoBoardCheckTargeter(state);
   var moves = targeter(state, piece);
-  return _.map(moves, function(move) {
+  moves = _.map(moves, function(move) {
     return move.wrap();
+  });
+  return _.filter(moves, function(position) {
+    var otherPiece = state.pieceAt(position);
+    return !otherPiece || piece.enemy(otherPiece);
   });
 };
 
