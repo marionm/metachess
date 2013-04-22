@@ -23,7 +23,8 @@ var prepareBoard = function() {
       var toPosition = $(this).data('index');
 
       var validMoves = window.game.currentState().get('validMoves')[currentPosition];
-      var valid = validMoves && _.contains(validMoves, toPosition);
+      var validPositions = _.map(validMoves, function(move) { return move.index; });
+      var valid = validMoves && _.contains(validPositions, toPosition);
 
       ui.draggable.draggable('option', 'revert', !valid);
 
