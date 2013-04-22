@@ -46,7 +46,7 @@ var pawnPromotionApplicator = function(state, piece, to, extraInfo) {
   return state;
 };
 
-rules.push(new Rule(rules.length, 'Standard pawn movement and promotion', 'pawn', {
+rules.push(new Rule(rules.length, 'Standard pawn movement', 'pawn', {
   targeter:    pawnTargeter,
   applicators: [
     Rule.defaultApplicator,
@@ -69,7 +69,7 @@ var pawnFirstMoveTargeter = function(state, piece) {
   }
 };
 
-rules.push(new Rule(rules.length, 'First pawn move can be two spaces', 'pawn', {
+rules.push(new Rule(rules.length, 'Standard pawn first move', 'pawn', {
   targeter: pawnFirstMoveTargeter
 }));
 

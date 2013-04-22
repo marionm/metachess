@@ -57,7 +57,7 @@ var standardPawnMovementEnabler = function(state) {
   return !reversePawnMovementEnabler(state);
 };
 
-rules.push(new Rule(rules.length, 'Standard pawn movement and promotion', 'pawn', {
+rules.push(new Rule(rules.length, 'Standard pawn movement', 'pawn', {
   enabler: standardPawnMovementEnabler,
   targeter: standard.pawn.targeter,
   applicators: [
@@ -101,7 +101,7 @@ rules.push(new Rule(rules.length, 'Pawns move and attack backwards', 'pawn', {
 
 // First-turn pawn movement
 
-rules.push(new Rule(rules.length, 'First pawn move can be two spaces', 'pawn', {
+rules.push(new Rule(rules.length, 'Standard pawn first move', 'pawn', {
   targeter: standard.pawn.firstMoveTargeter
 }));
 
