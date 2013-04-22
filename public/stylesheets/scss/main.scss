@@ -12,10 +12,8 @@ dl {
   }
 }
 
-span {
-  &.alert {
-    &.checkmate {
-      color: darkRed;
-    }
+#status {
+  .checkmate {
+    color: darkRed;
   }
 }

@@ -124,6 +124,10 @@ var Game = Backbone.Model.extend({
     } else {
       move.save();
     }
+
+    var status = $('#status');
+    status.empty();
+    status.append($('<span/>').text(' - Loading...'));
   }
 
 });

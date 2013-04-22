@@ -7,5 +7,5 @@ dl dt {
 dl dd {
   margin-left: 100px; }
 
-span.alert.checkmate {
+#status .checkmate {
   color: darkRed; }

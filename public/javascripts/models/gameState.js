@@ -47,8 +47,10 @@ var GameState = Backbone.Model.extend({
       }
     });
 
+    var status = $('#status');
+    status.empty();
     if(_.size(this.get('validMoves')) == 0) {
-      $('#checkmate-alert').show();
+      status.append($('<span/>').addClass('checkmate').text(' - Checkmate'));
     }
 
     this.renderCurrentRules();
