@@ -94,7 +94,7 @@ var reversePawnTargeter = function(state, piece) {
   return moves;
 };
 
-rules.push(new Rule(rules.length, 'Pawns move and attack backwards', 'pawn', {
+rules.push(new Rule(rules.length, 'Pawns move/attack backwards', 'pawn', {
   enabler:  reversePawnMovementEnabler,
   targeter: reversePawnTargeter
 }));
