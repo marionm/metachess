@@ -301,6 +301,10 @@ rules.push(new Rule(rules.length, 'Castling', 'king', {
 
 
 
+// Bit of a hack for the UI
+rules[0].condition = 'All situations';
+rules[0].effect    = 'Standard chess rules';
+
 module.exports = {
   ruleSet: new RuleSet('standard-chess', 'Standard', rules),
   pawn: {

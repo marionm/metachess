@@ -94,10 +94,16 @@ var reversePawnTargeter = function(state, piece) {
   return moves;
 };
 
-rules.push(new Rule(rules.length, 'Pawns move/attack backwards', 'pawn', {
-  enabler:  reversePawnMovementEnabler,
-  targeter: reversePawnTargeter
-}));
+rules.push(new Rule(rules.length, {
+    condition: "Queen on its opponent's back rank",
+    effect:    'Pawns move/attack backwards'
+  },
+  'pawn',
+  {
+    enabler:  reversePawnMovementEnabler,
+    targeter: reversePawnTargeter
+  }
+));
 
 // First-turn pawn movement
 
@@ -152,10 +158,16 @@ var rookBishopMovementSwapEnabler = function(state) {
   return pieceAt(state, positions, positions, 'king');
 };
 
-rules.push(new Rule(rules.length, 'Rooks move like bishops', 'rook', {
-  enabler:  rookBishopMovementSwapEnabler,
-  targeter: standard.bishop.targeter
-}));
+rules.push(new Rule(rules.length, {
+    condition: 'King in one of the four center-most positions',
+    effect:    'Rooks move like bishops'
+  },
+  'rook',
+  {
+    enabler:  rookBishopMovementSwapEnabler,
+    targeter: standard.bishop.targeter
+  }
+));
 
 rules.push(new Rule(rules.length, 'Bishops move like rooks', 'bishop', {
   enabler:  rookBishopMovementSwapEnabler,
@@ -200,10 +212,17 @@ var superKnightTargeter22 = function(state, piece) {
   });
 };
 
-rules.push(new Rule(rules.length, 'Knights move in a 2-by-2 shape', 'knight', {
-  enabler:  superKnightEnabler22,
-  targeter: superKnightTargeter22
-}));
+rules.push(new Rule(rules.length, {
+    condition: "Rook on its opponent's back rank",
+    effect:    'Knights move in a 2-by-2 shape',
+    detailed:  'Knights can move in a 2-by-2 L shape, but not the standard shape'
+  },
+  'knight',
+  {
+    enabler:  superKnightEnabler22,
+    targeter: superKnightTargeter22
+  }
+));
 
 // Super knights (3-1)
 // Enabled when a bishop is in the back row
@@ -234,10 +253,17 @@ var superKnightTargeter31 = function(state, piece) {
   });
 };
 
-rules.push(new Rule(rules.length, 'Knights move in a 3-by-1 shape', 'knight', {
-  enabler:  superKnightEnabler31,
-  targeter: superKnightTargeter31
-}));
+rules.push(new Rule(rules.length, {
+    condition: "Bishop on its opponent's back rank",
+    effect:    'Knights move in a 3-by-1 shape',
+    detailed:  'Knights can move in a 3-by-1 L shape, but not the standard shape'
+  },
+  'knight',
+  {
+    enabler:  superKnightEnabler31,
+    targeter: superKnightTargeter31
+  }
+));
 
 // Wrapping knights
 // Enabled when a king is in a corner
@@ -275,10 +301,16 @@ var wrappingKnightTargeter = function(state, piece) {
   });
 };
 
-rules.push(new Rule(rules.length, 'Knights wrap around the board', 'knight', {
-  enabler:  wrappingKnightEnabler,
-  targeter: wrappingKnightTargeter
-}));
+rules.push(new Rule(rules.length, {
+    condition: "King in one of the board's corners",
+    effect:    'Knights wrap around the board'
+  },
+  'knight',
+  {
+    enabler:  wrappingKnightEnabler,
+    targeter: wrappingKnightTargeter
+  }
+));
 
 
 
@@ -306,10 +338,16 @@ var gimppedQueenMovementEnabler = function(state) {
   return pieceAt(state, sideColumns, sideColumns, 'knight');
 };
 
-rules.push(new Rule(rules.length, 'Queens move like kings', 'queen', {
-  enabler:  gimppedQueenMovementEnabler,
-  targeter: standard.king.targeter
-}));
+rules.push(new Rule(rules.length, {
+    condition: 'Knight on the A or H file',
+    effect:    'Queens move like kings'
+  },
+  'queen',
+  {
+    enabler:  gimppedQueenMovementEnabler,
+    targeter: standard.king.targeter
+  }
+));
 
 
 

@@ -1,0 +1,13 @@
+div#ruleSet
+  h3 Rule Set
+  table#conditions
+    thead
+      tr
+        th Condition
+        th Effect
+    tbody
+      each rule in game.ruleSet().rules
+        if(rule.condition || rule.effect)
+          tr
+            td= rule.condition
+            td= rule.effect

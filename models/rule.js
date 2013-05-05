@@ -8,9 +8,16 @@ var defaultApplicator = function(state, piece, to, extraInfo) {
 
 var Rule = function(id, description, pieceType, functions, standard) {
   this.id = id;
-  this.description = description;
   this.pieceType = pieceType;
   this.standard = standard || false;
+
+  if(typeof description == 'string') {
+    this.description = description;
+  } else {
+    this.description = description.effect;
+    this.condition = description.condition;
+    this.effect = description.detailed || description.effect;
+  }
 
   functions = functions || {};
 
@@ -79,11 +86,18 @@ Rule.prototype.isEnabled = function(state) {
 }
 
 Rule.prototype.toJSON = function() {
-  return {
+  var json = {
     id: this.id,
     description: this.description,
     standard: this.standard
   };
+  if(this.condition) {
+    json.condition = this.condition;
+  }
+  if(this.effect) {
+    json.effect = this.effect;
+  }
+  return json;
 };
 
 Rule.validDirectionalMoves = function(state, piece, directions, continuous) {
