@@ -9,6 +9,7 @@ var Game = Backbone.Model.extend({
     var id = this.get('id');
     socket.on(id + 'moved', function(data) {
       //FIXME: Better error detection
+      game.saving = false;
       if(data == 'nope') {
         game.error(data);
       } else {
@@ -103,6 +104,9 @@ var Game = Backbone.Model.extend({
   },
 
   move: function(piece, targetCell) {
+    var game = this;
+    if(game.saving) return;
+
     var move = new Move({
       gameId: this.id,
       piece:  piece,
@@ -110,8 +114,6 @@ var Game = Backbone.Model.extend({
       to:     targetCell.data('index'),
       socket: this.get('socket')
     });
-
-    var game = this;
 
     if(move.promotion()) {
       showDialog('#promotionDialog', 'Promote pawn to...', {
@@ -143,6 +145,7 @@ var Game = Backbone.Model.extend({
   preSaveMove: function(piece, targetCell) {
     piece.getCell().empty();
     targetCell.empty().append(piece.toHtml());
+    game.saving = true;
   }
 
 });
