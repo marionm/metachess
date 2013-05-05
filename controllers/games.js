@@ -1,3 +1,5 @@
+var _ = require('underscore');
+
 var Game = require('../models/game').model;
 var GameState = require('../models/gameState').model;
 var GameCounter = require('../models/gameCounter');
@@ -12,6 +14,9 @@ var show = function(req, res, game) {
 
 exports.index = function(req, res) {
   Game.find({}, function(err, games) {
+    games = _.sortBy(games, function(game) {
+      return game.number;
+    }).reverse();
     res.render('games/index', {games: games});
   });
 }
