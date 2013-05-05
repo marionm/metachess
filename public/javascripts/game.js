@@ -6,7 +6,7 @@ var prepareBoard = function() {
 
   cells.click(function() {
     if(Piece.selected && $(this).hasClass('valid-move')) {
-      window.game.move(Piece.selected, $(this).data('index'));
+      window.game.move(Piece.selected, $(this));
     }
   });
 
@@ -29,7 +29,7 @@ var prepareBoard = function() {
       ui.draggable.draggable('option', 'revert', !valid);
 
       if(valid) {
-        window.game.move(piece, toPosition);
+        window.game.move(piece, $(this));
         //TODO: Need to check that server says it's valid too
         return false;
       } else {

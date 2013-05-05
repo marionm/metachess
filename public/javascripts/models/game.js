@@ -9,7 +9,9 @@ var Game = Backbone.Model.extend({
     var id = this.get('id');
     socket.on(id + 'moved', function(data) {
       //FIXME: Better error detection
-      if(data != 'nope') {
+      if(data == 'nope') {
+        game.error(data);
+      } else {
         game.success(data);
       }
     });
@@ -78,6 +80,10 @@ var Game = Backbone.Model.extend({
     state.render();
   },
 
+  error: function(res) {
+    _.last(game.get('states')).render();
+  },
+
   postFetch: function() {
     var states = [];
     var lastState;
@@ -96,12 +102,12 @@ var Game = Backbone.Model.extend({
     return _.last(this.get('states'));
   },
 
-  move: function(piece, to) {
+  move: function(piece, targetCell) {
     var move = new Move({
       gameId: this.id,
       piece:  piece,
       from:   piece.get('position'),
-      to:     to,
+      to:     targetCell.data('index'),
       socket: this.get('socket')
     });
 
@@ -118,16 +124,25 @@ var Game = Backbone.Model.extend({
           var type = $('input:checked', this).val();
           move.set('promoteTo', type);
 
+          var newPiece = piece.clone();
+          newPiece.set('type', type);
+          game.preSaveMove(newPiece, targetCell);
           move.save();
         }
       });
     } else {
+      game.preSaveMove(piece, targetCell);
       move.save();
     }
 
     var status = $('#status');
     status.empty();
     status.append($('<span/>').text(' - Loading...'));
+  },
+
+  preSaveMove: function(piece, targetCell) {
+    piece.getCell().empty();
+    targetCell.empty().append(piece.toHtml());
   }
 
 });
