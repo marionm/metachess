@@ -5,9 +5,14 @@ h2 Games
 div
   form(method='post', action='/games')
     input(type='submit', value='Start new game')
+    select(name='ruleSetId')
+      each ruleSet in ruleSets
+        - var selected = ruleSet.default ? 'selected' : null;
+        option(value=ruleSet.id, selected=selected)= ruleSet.name
 
 div
   ul
     each game in games
       li
         a(href='/games/' + game.number) Game ##{game.number}
+        span  - #{game.ruleSet().name}

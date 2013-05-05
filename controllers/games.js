@@ -3,6 +3,7 @@ var _ = require('underscore');
 var Game = require('../models/game').model;
 var GameState = require('../models/gameState').model;
 var GameCounter = require('../models/gameCounter');
+var RuleSets = require('../models/ruleSets');
 
 var show = function(req, res, game) {
   res.render('games/show', {
@@ -17,7 +18,10 @@ exports.index = function(req, res) {
     games = _.sortBy(games, function(game) {
       return game.number;
     }).reverse();
-    res.render('games/index', {games: games});
+    res.render('games/index', {
+      games: games,
+      ruleSets: RuleSets.ruleSets
+    });
   });
 }
 
@@ -31,7 +35,7 @@ exports.create = function(req, res) {
   GameCounter.next(function(gameId) {
     var game = new Game({
       number: gameId,
-      ruleSetId: req.ruleSetId || 'metachess-default'
+      ruleSetId: req.body.ruleSetId || 'metachess-default'
     });
     game.save(function() {
       res.redirect('/games/' + gameId);
