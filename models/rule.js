@@ -6,10 +6,11 @@ var defaultApplicator = function(state, piece, to, extraInfo) {
   return state.movePiece(piece, to);
 };
 
-var Rule = function(id, description, pieceType, functions) {
+var Rule = function(id, description, pieceType, functions, standard) {
   this.id = id;
   this.description = description;
   this.pieceType = pieceType;
+  this.standard = standard || false;
 
   functions = functions || {};
 
@@ -80,7 +81,8 @@ Rule.prototype.isEnabled = function(state) {
 Rule.prototype.toJSON = function() {
   return {
     id: this.id,
-    description: this.description
+    description: this.description,
+    standard: this.standard
   };
 };
 

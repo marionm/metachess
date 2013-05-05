@@ -64,7 +64,7 @@ rules.push(new Rule(rules.length, 'Standard pawn movement', 'pawn', {
     Rule.defaultApplicator,
     standard.pawn.promotionApplicator
   ]
-}));
+}, true));
 
 // Reverse pawn movement
 
@@ -103,7 +103,7 @@ rules.push(new Rule(rules.length, 'Pawns move and attack backwards', 'pawn', {
 
 rules.push(new Rule(rules.length, 'Standard pawn first move', 'pawn', {
   targeter: standard.pawn.firstMoveTargeter
-}));
+}, true));
 
 // En passant
 
@@ -113,7 +113,7 @@ rules.push(new Rule(rules.length, 'En Passant', 'pawn', {
     Rule.defaultApplicator,
     standard.pawn.enPassantCaptureApplicator
   ]
-}));
+}, true));
 
 
 
@@ -126,7 +126,7 @@ var standardRookMovementEnabler = function(state) {
 rules.push(new Rule(rules.length, 'Standard rook movement', 'rook', {
   enabler:  standardRookMovementEnabler,
   targeter: standard.rook.targeter
-}));
+}, true));
 
 // Standard bishop movement
 
@@ -137,7 +137,7 @@ var standardBishopMovementEnabler = function(state) {
 rules.push(new Rule(rules.length, 'Standard bishop movement', 'bishop', {
   enabler:  standardBishopMovementEnabler,
   targeter: standard.bishop.targeter
-}));
+}, true));
 
 // Swapped rook/bishop movement
 // Enabled when a king is in one of the center four squares
@@ -173,7 +173,7 @@ var standardKnightEnabler = function(state) {
 rules.push(new Rule(rules.length, 'Standard knight movement', 'knight', {
   enabler:  standardKnightEnabler,
   targeter: standard.knight.targeter
-}));
+}, true));
 
 // Super knights (2-2)
 // Enabled when a rook is in the back row
@@ -291,7 +291,7 @@ var standardQueenMovementEnabler = function(state) {
 rules.push(new Rule(rules.length, 'Standard queen movement', 'queen', {
   enabler:  standardQueenMovementEnabler,
   targeter: standard.queen.targeter
-}));
+}, true));
 
 // Gimpped queen movement
 // Enabled when a knight is in a side column
@@ -317,7 +317,7 @@ rules.push(new Rule(rules.length, 'Queens move like kings', 'queen', {
 
 rules.push(new Rule(rules.length, 'Standard king movement', 'king', {
   targeter: standard.king.targeter
-}));
+}, true));
 
 rules.push(new Rule(rules.length, 'Castling', 'king', {
   targeter: standard.king.castlingTargeter,
@@ -325,7 +325,7 @@ rules.push(new Rule(rules.length, 'Castling', 'king', {
     Rule.defaultApplicator,
     standard.king.castlingApplicator
   ]
-}));
+}, true));
 
 
 

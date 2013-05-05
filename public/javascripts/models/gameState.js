@@ -61,8 +61,11 @@ var GameState = Backbone.Model.extend({
   renderCurrentRules: function() {
     var currentRuleList = $($('#rules .current .list')[0]);
     currentRuleList.empty();
-    _.each((this.get('enabledRules') || []), function(rule) {
-      currentRuleList.append($('<li/>').text(rule.description).data('id', rule.id));
+    _.each((this.get('enabledRules') || []), function(rule, i) {
+      var currentRule = $('<span/>').text(rule.description)
+      currentRule.addClass(rule.standard ? 'standard' : 'non-standard');
+      currentRule.addClass(i % 2 == 0 ? 'even' : 'odd');
+      currentRuleList.append($('<li/>').data('id', rule.id).append(currentRule));
     });
   },
 

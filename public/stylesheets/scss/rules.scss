@@ -11,6 +11,18 @@ div#rules {
   .current {
     float: left;
     width: $half-board;
+
+    span {
+      padding: 0 5px;
+    }
+
+    .non-standard {
+      color: white;
+      background-color: darkGreen;
+      &.odd{
+        background-color: green;
+      }
+    }
   }
 
   .changes {

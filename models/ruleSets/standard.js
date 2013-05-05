@@ -52,7 +52,7 @@ rules.push(new Rule(rules.length, 'Standard pawn movement', 'pawn', {
     Rule.defaultApplicator,
     pawnPromotionApplicator
   ]
-}));
+}, true));
 
 
 
@@ -71,7 +71,7 @@ var pawnFirstMoveTargeter = function(state, piece) {
 
 rules.push(new Rule(rules.length, 'Standard pawn first move', 'pawn', {
   targeter: pawnFirstMoveTargeter
-}));
+}, true));
 
 
 
@@ -110,7 +110,7 @@ rules.push(new Rule(rules.length, 'En Passant', 'pawn', {
     Rule.defaultApplicator,
     enPassantCaptureApplicator
   ]
-}));
+}, true));
 
 
 
@@ -123,7 +123,7 @@ var rookTargeter = function(state, piece) {
 
 rules.push(new Rule(rules.length, 'Standard rook movement', 'rook', {
   targeter: rookTargeter
-}));
+}, true));
 
 
 
@@ -162,7 +162,7 @@ var knightTargeter = function(state, piece) {
 
 rules.push(new Rule(rules.length, 'Standard knight movement', 'knight', {
   targeter: knightTargeter
-}));
+}, true));
 
 
 
@@ -175,7 +175,7 @@ var bishopTargeter = function(state, piece) {
 
 rules.push(new Rule(rules.length, 'Standard bishop movement', 'bishop', {
   targeter: bishopTargeter
-}));
+}, true));
 
 
 
@@ -188,7 +188,7 @@ var queenTargeter = function(state, piece) {
 
 rules.push(new Rule(rules.length, 'Standard queen movement', 'queen', {
   targeter: queenTargeter
-}));
+}, true));
 
 
 
@@ -201,7 +201,7 @@ var kingTargeter = function(state, piece) {
 
 rules.push(new Rule(rules.length, 'Standard king movement', 'king', {
   targeter: kingTargeter
-}));
+}, true));
 
 
 
@@ -297,7 +297,7 @@ rules.push(new Rule(rules.length, 'Castling', 'king', {
     Rule.defaultApplicator,
     castlingApplicator
   ]
-}));
+}, true));
 
 
 

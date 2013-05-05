@@ -4,6 +4,13 @@ div#rules {
   div#rules .current {
     float: left;
     width: 256px; }
+    div#rules .current span {
+      padding: 0 5px; }
+    div#rules .current .non-standard {
+      color: white;
+      background-color: darkGreen; }
+      div#rules .current .non-standard.odd {
+        background-color: green; }
   div#rules .changes {
     width: 256px;
     margin-left: 256px; }
