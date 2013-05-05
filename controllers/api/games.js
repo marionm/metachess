@@ -18,6 +18,7 @@ exports.show = function(req, res) {
     var json = game.toJSON();
     var currentState = _.last(json.states);
     currentState.nextPlayer = game.nextPlayer();
+    currentState.nextPlayerInCheck = game.nextPlayerInCheck(ruleSet);
     currentState.validMoves = validMoves;
     currentState.enabledRules = _.map(enabledRules, function(rule) {
       return rule.toJSON();
@@ -70,6 +71,7 @@ exports.move = function(data, callback) {
     game.save(function(err, game) {
       //TODO: Handle errors
       newStateJson.nextPlayer = game.nextPlayer();
+      newStateJson.nextPlayerInCheck = game.nextPlayerInCheck(ruleSet);
       callback(response);
     });
 

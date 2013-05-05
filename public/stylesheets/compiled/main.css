@@ -9,3 +9,5 @@ dl dd {
 
 #status .checkmate {
   color: darkRed; }
+#status .stalemate {
+  color: darkRed; }

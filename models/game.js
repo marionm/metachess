@@ -16,6 +16,10 @@ Schema.methods.nextPlayer = function() {
   return this.states.length % 2 == 0 ? 'black' : 'white';
 }
 
+Schema.methods.nextPlayerInCheck = function(ruleSet) {
+  return this.currentState().inCheck(this.nextPlayer(), ruleSet);
+}
+
 Schema.pre('save', function(next) {
   if(this.states.length == 0) {
     this.states.push(new GameState.model());
