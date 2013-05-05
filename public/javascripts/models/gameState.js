@@ -47,10 +47,15 @@ var GameState = Backbone.Model.extend({
       }
     });
 
+    var whitesTurn = this.get('nextPlayer') == 'white';
     var status = $('#status');
     status.empty();
     if(_.size(this.get('validMoves')) == 0) {
-      status.append($('<span/>').addClass('checkmate').text(' - Checkmate'));
+      var winner = whitesTurn ? 'Black' : 'White';
+      status.append($('<span/>').addClass('checkmate').text(' - Checkmate, ' + winner + ' wins'));
+    } else {
+      var turn = whitesTurn ? "White's" : "Black's";
+      status.append($('<span/>').text(' - ' + turn + ' turn'));
     }
 
     this.renderCurrentRules();

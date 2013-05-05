@@ -12,6 +12,10 @@ Schema.methods.currentState = function() {
   return _.last(this.states);
 };
 
+Schema.methods.nextPlayer = function() {
+  return this.states.length % 2 == 0 ? 'black' : 'white';
+}
+
 Schema.pre('save', function(next) {
   if(this.states.length == 0) {
     this.states.push(new GameState.model());
