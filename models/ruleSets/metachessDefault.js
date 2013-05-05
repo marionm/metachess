@@ -330,5 +330,5 @@ rules.push(new Rule(rules.length, 'Castling', 'king', {
 
 
 module.exports = {
-  ruleSet: new RuleSet('Metachess (default)', rules)
+  ruleSet: new RuleSet('metachess-default', 'Metachess (default)', rules)
 };

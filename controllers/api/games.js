@@ -8,8 +8,8 @@ var RuleSets = require('../../models/ruleSets');
 
 exports.show = function(req, res) {
   Game.findById(req.params.gameId, function(err, game) {
-    //var ruleSet = RuleSets.standard;
-    var ruleSet = RuleSets.metachessDefault;
+    //var ruleSet = RuleSets.get('standard-chess');
+    var ruleSet = RuleSets.get('metachess-default');
     var state = game.currentState();
 
     var validMoves = state.validMoves(ruleSet);
@@ -39,8 +39,8 @@ exports.move = function(data, callback) {
       promoteTo: data.promoteTo
     };
 
-    //var ruleSet = RuleSets.standard;
-    var ruleSet = RuleSets.metachessDefault;
+    //var ruleSet = RuleSets.get('standard-chess');
+    var ruleSet = RuleSets.get('metachess-default');
     //Set ruleSet on the state so it is available in inCheck later, necessary for castling
     //TODO: Ugh, really?
     state.ruleSet = ruleSet;

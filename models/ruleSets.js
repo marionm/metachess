@@ -1,6 +1,16 @@
-// TODO: Iterate over the contents of the folder
-var dir = './ruleSets';
+var _  = require('underscore');
+var fs = require('fs');
+
+var dir = __dirname + '/ruleSets';
+var ruleSets = {};
+_.each(fs.readdirSync(dir), function(file) {
+  var ruleSet = require(dir + '/' + file).ruleSet;
+  ruleSets[ruleSet.id] = ruleSet;
+});
+
 module.exports = {
-  standard: require(dir + '/standard').ruleSet,
-  metachessDefault: require(dir + '/metachessDefault').ruleSet
+  ruleSets: ruleSets,
+  get: function(id) {
+    return ruleSets[id];
+  }
 };

@@ -302,7 +302,7 @@ rules.push(new Rule(rules.length, 'Castling', 'king', {
 
 
 module.exports = {
-  ruleSet: new RuleSet('Standard', rules),
+  ruleSet: new RuleSet('standard-chess', 'Standard', rules),
   pawn: {
     targeter:                   pawnTargeter,
     promotionApplicator:        pawnPromotionApplicator,

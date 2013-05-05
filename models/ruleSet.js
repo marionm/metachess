@@ -3,7 +3,8 @@ var _ = require('underscore');
 var GameState = require('./gameState').model;
 
 //TODO: Convert to Mongoose model maybe
-var RuleSet = function(name, rules) {
+var RuleSet = function(id, name, rules) {
+  this.id = id;
   this.name = name;
   this.rules = rules;
 };
