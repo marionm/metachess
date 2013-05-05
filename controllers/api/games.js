@@ -8,8 +8,7 @@ var RuleSets = require('../../models/ruleSets');
 
 exports.show = function(req, res) {
   Game.findById(req.params.gameId, function(err, game) {
-    //var ruleSet = RuleSets.get('standard-chess');
-    var ruleSet = RuleSets.get('metachess-default');
+    var ruleSet = game.ruleSet();
     var state = game.currentState();
 
     var validMoves = state.validMoves(ruleSet);
@@ -18,7 +17,7 @@ exports.show = function(req, res) {
     var json = game.toJSON();
     var currentState = _.last(json.states);
     currentState.nextPlayer = game.nextPlayer();
-    currentState.nextPlayerInCheck = game.nextPlayerInCheck(ruleSet);
+    currentState.nextPlayerInCheck = game.nextPlayerInCheck();
     currentState.validMoves = validMoves;
     currentState.enabledRules = _.map(enabledRules, function(rule) {
       return rule.toJSON();
@@ -39,8 +38,7 @@ exports.move = function(data, callback) {
       promoteTo: data.promoteTo
     };
 
-    //var ruleSet = RuleSets.get('standard-chess');
-    var ruleSet = RuleSets.get('metachess-default');
+    var ruleSet = game.ruleSet();
     //Set ruleSet on the state so it is available in inCheck later, necessary for castling
     //TODO: Ugh, really?
     state.ruleSet = ruleSet;
@@ -71,7 +69,7 @@ exports.move = function(data, callback) {
     game.save(function(err, game) {
       //TODO: Handle errors
       newStateJson.nextPlayer = game.nextPlayer();
-      newStateJson.nextPlayerInCheck = game.nextPlayerInCheck(ruleSet);
+      newStateJson.nextPlayerInCheck = game.nextPlayerInCheck();
       callback(response);
     });
 

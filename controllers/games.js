@@ -30,7 +30,8 @@ exports.show = function(req, res) {
 exports.create = function(req, res) {
   GameCounter.next(function(gameId) {
     var game = new Game({
-      number: gameId
+      number: gameId,
+      ruleSetId: req.ruleSetId || 'metachess-default'
     });
     game.save(function() {
       res.redirect('/games/' + gameId);
