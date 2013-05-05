@@ -7,8 +7,8 @@ Experimental node.js implementation of metachess, inspired by GEB.
 The game starts with the standard set of chess rules, but rules may be added or removed as the game progresses. The default rules:
 
 * Knight on the A or H file = Queens move like kings
-* Bishop on its opponent's back rank = Knights can move in a 2-by-2 L shape, but not the standard shape
-* Rook on its opponent's back rank = Knights can move in a 3-by-1 L shape, but not the standard shape
+* Rook on its opponent's back rank = Knights can move in a 2-by-2 L shape, but not the standard shape
+* Bishop on its opponent's back rank = Knights can move in a 3-by-1 L shape, but not the standard shape
 * Queen on its opponent's back rank = Pawns move and attack backwards
   * Pawns cannot be promoted on their own back rank
   * Pawns can _always_ move two spaces forward from their starting rank
