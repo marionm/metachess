@@ -169,10 +169,16 @@ rules.push(new Rule(rules.length, {
   }
 ));
 
-rules.push(new Rule(rules.length, 'Bishops move like rooks', 'bishop', {
-  enabler:  rookBishopMovementSwapEnabler,
-  targeter: standard.rook.targeter
-}));
+rules.push(new Rule(rules.length, {
+    condition: 'King in one of the four center-most positions',
+    effect:    'Bishops move like rooks'
+  },
+  'bishop',
+  {
+    enabler:  rookBishopMovementSwapEnabler,
+    targeter: standard.rook.targeter
+  }
+));
 
 
 
