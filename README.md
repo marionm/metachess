@@ -4,7 +4,7 @@ Experimental node.js implementation of metachess, inspired by GEB.
 
 ### Rules
 
-The game starts with the standard set of chess rules, but rules may be added or removed as the game progresses. The default rule set:
+The game starts with the standard set of chess rules, but rules may be added or removed as the game progresses. The default rules:
 
 * Knight on the A or H file = Queens move like kings
 * Bishop on its opponent's back rank = Knights can move in a 2-by-2 L shape, but not the standard shape
@@ -25,7 +25,9 @@ The game starts with the standard set of chess rules, but rules may be added or 
 
 ### Adding a new rule set
 
-Create a new file under `models/ruleSets`, create an array of `Rule` objects, and export a `RuleSet`. A good example is `models/ruleSets/metachessStandard.js`.
+Create a new file under `models/ruleSets`, create an array of `Rule` objects, and export a `RuleSet`.
+
+A good example is `models/ruleSets/metachessStandard.js`.
 
 ### License
 
