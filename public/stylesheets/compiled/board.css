@@ -15,6 +15,8 @@ table.board {
       background-color: khaki; }
     table.board .cell.dark {
       background-color: darkKhaki; }
+    table.board .cell.check {
+      background-color: #DE2D2D; }
     table.board .cell.original {
       background-color: darkgoldenrod; }
     table.board .cell.previous-move {

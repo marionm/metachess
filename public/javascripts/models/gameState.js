@@ -41,17 +41,20 @@ var GameState = Backbone.Model.extend({
 
       Piece.deselectAll();
 
+      cell.removeClass('check');
       cell.removeClass('previous-move');
       if(_.include(previousMoveIndexes, cell.data('index'))) {
         cell.addClass('previous-move');
       }
     });
 
-    var whitesTurn = this.get('nextPlayer') == 'white';
+    var turnColor = this.get('nextPlayer');
+    var whitesTurn = turnColor == 'white';
+    var inCheck = this.get('nextPlayerInCheck');
     var status = '';
     var statusClass = '';
     if(_.size(this.get('validMoves')) == 0) {
-      if(this.get('nextPlayerInCheck')) {
+      if(inCheck) {
         var winner = whitesTurn ? 'Black' : 'White';
         status = 'Checkmate, ' + winner + ' wins';
         statusClass = 'checkmate';
@@ -63,6 +66,13 @@ var GameState = Backbone.Model.extend({
       status = whitesTurn ? "White's turn" : "Black's turn";
     }
     $('#status').empty().append($('<span/>').addClass(statusClass).text(' - ' + status));
+
+    if(inCheck) {
+      var king = _.find(pieces, function(piece) {
+        return piece.get('type') == 'king' && piece.get('color') == turnColor;
+      });
+      king.getCell().addClass('check');
+    }
 
     this.renderCurrentRules();
   },
